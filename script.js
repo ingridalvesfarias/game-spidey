@@ -1,6 +1,6 @@
 // === INICIALIZAÇÃO ===
 window.onload = () => {
-    // Tenta iniciar a música em qualquer carregamento/volta
+    // Inicia a música em qualquer carregamento/volta
     tentarTocarMusica();
 
     if (sessionStorage.getItem('hub_loaded')) {
@@ -43,7 +43,7 @@ function startLoading() {
             status.innerText = "100%";
             fill.style.width = "100%";
             completeMsg.classList.remove('hidden');
-            
+
             sessionStorage.setItem('hub_loaded', 'true');
             setTimeout(goToTitleScreen, 1500);
         }
@@ -112,7 +112,7 @@ function goToMenuSelection() {
         };
     });
 
-    // Botão Voltar
+    // Botão Voltar(BACK)
     if (btnBack) {
         btnBack.replaceWith(btnBack.cloneNode(true));
         const newBtnBack = document.getElementById('btn-back');
@@ -132,7 +132,7 @@ function goToMenuSelection() {
                 'air': 'air_battle.html',
                 'boss': 'boss_fight.html'
             };
-            
+
             if (pages[selectedGame]) {
                 window.location.href = pages[selectedGame];
             }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <title>Spider-Man: Multiverse Battles</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <section id="loading-screen" class="screen">
@@ -29,39 +31,41 @@
     </section>
 
     <section id="menu-screen" class="screen hidden">
-        <button id="btn-back" class="nav-button"> < BACK </button>
-        
-        <h1 class="menu-title">SELECT THE GAME</h1>
+        <button id="btn-back" class="nav-button">
+            < BACK </button>
 
-        <div class="mobile-arrow arrow-left" id="prev-btn"></div>
-        <div class="mobile-arrow arrow-right" id="next-btn"></div>
+                <h1 class="menu-title">SELECT THE GAME</h1>
 
-        <div class="games-container" id="carousel">
-            <div class="game-card active" data-game="classic">
-                <div class="card-preview"></div>
-                <h3>Spider-Man vs Goblin</h3>
-                <p>O Clássico</p>
-            </div>
-            <div class="game-card" data-game="venom">
-                <div class="card-preview"></div>
-                <h3>Spider-Man vs Venom</h3>
-                <p>Jogar Versão Bônus</p>
-            </div>
-            <div class="game-card" data-game="air">
-                <div class="card-preview"></div>
-                <h3>Air Battle</h3>
-                <p>Side Scroller</p>
-            </div>
-            <div class="game-card" data-game="boss">
-                <div class="card-preview"></div>
-                <h3>Boss Fight</h3>
-                <p>Estilo Cuphead</p>
-            </div>
-        </div>
+                <div class="mobile-arrow arrow-left" id="prev-btn"></div>
+                <div class="mobile-arrow arrow-right" id="next-btn"></div>
 
-        <button id="btn-select" class="select-button">SELECT</button>
+                <div class="games-container" id="carousel">
+                    <div class="game-card active" data-game="classic">
+                        <div class="card-preview"></div>
+                        <h3>Spider-Man vs Goblin</h3>
+                        <p>O Clássico</p>
+                    </div>
+                    <div class="game-card" data-game="venom">
+                        <div class="card-preview"></div>
+                        <h3>Spider-Man vs Venom</h3>
+                        <p>Jogar Versão Bônus</p>
+                    </div>
+                    <div class="game-card" data-game="air">
+                        <div class="card-preview"></div>
+                        <h3>Air Battle</h3>
+                        <p>Side Scroller</p>
+                    </div>
+                    <div class="game-card" data-game="boss">
+                        <div class="card-preview"></div>
+                        <h3>Boss Fight</h3>
+                        <p>Estilo Cuphead</p>
+                    </div>
+                </div>
+
+                <button id="btn-select" class="select-button">SELECT</button>
     </section>
 
     <script src="script.js"></script>
 </body>
+
 </html>

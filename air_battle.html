@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,15 +8,19 @@
     <title>Aranha vs Duende: Air Battle</title>
     <style>
         body {
-            margin: 0; padding: 0;
-            display: flex; flex-direction: column; align-items: center;
-            background-color: #000; color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #000;
+            color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             touch-action: none;
         }
 
-        /* BOTÃO BACK AJUSTADO */
+        /* BOTÃO BACK */
         .nav-button-game {
             position: absolute;
             top: 15px;
@@ -35,52 +40,91 @@
 
         /* CONTAINER DO JOGO RESPONSIVO */
         #game-container {
-            position: relative; 
+            position: relative;
             margin-top: 60px;
             width: 95vw;
             max-width: 850px;
             aspect-ratio: 16 / 9;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
             border: 2px solid #222;
             overflow: hidden;
         }
 
-        canvas { 
+        canvas {
             width: 100%;
             height: 100%;
-            display: block; 
-            background: #000; 
+            display: block;
+            background: #000;
         }
-        
+
         .ui-panel {
-            position: absolute; top: 5px; width: 100%;
-            display: flex; justify-content: center; align-items: center;
-            padding: 5px; pointer-events: none;
-            text-transform: uppercase; font-weight: bold; text-shadow: 2px 2px 4px #000;
+            position: absolute;
+            top: 5px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            pointer-events: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px #000;
             z-index: 10;
         }
 
-        .icon-container { display: flex; align-items: center; gap: 8px; }
+        .icon-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
         .icon-circle {
-            width: clamp(30px, 8vw, 45px); 
-            height: clamp(30px, 8vw, 45px); 
-            border-radius: 50%; overflow: hidden;
+            width: clamp(30px, 8vw, 45px);
+            height: clamp(30px, 8vw, 45px);
+            border-radius: 50%;
+            overflow: hidden;
         }
 
-        .icon-spider { border: 2px solid #e74c3c; box-shadow: 0 0 10px rgba(231, 76, 60, 0.7); }
-        .icon-goblin { border: 2px solid #2ecc71; box-shadow: 0 0 10px rgba(46, 204, 113, 0.7); }
-
-        .health-bar { 
-            width: clamp(60px, 20vw, 150px); 
-            height: 12px; background: #444; border: 1px solid #fff; border-radius: 3px; overflow: hidden; 
+        .icon-spider {
+            border: 2px solid #e74c3c;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
         }
 
-        .health-fill { height: 100%; transition: width 0.2s; }
-        #player-health { background: #e74c3c; width: 100%; }
-        #enemy-health { background: #2ecc71; width: 100%; }
+        .icon-goblin {
+            border: 2px solid #2ecc71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.7);
+        }
 
-        .vs-text { color: white; font-size: 18px; font-weight: bold; margin: 0 10px; }
+        .health-bar {
+            width: clamp(60px, 20vw, 150px);
+            height: 12px;
+            background: #444;
+            border: 1px solid #fff;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .health-fill {
+            height: 100%;
+            transition: width 0.2s;
+        }
+
+        #player-health {
+            background: #e74c3c;
+            width: 100%;
+        }
+
+        #enemy-health {
+            background: #2ecc71;
+            width: 100%;
+        }
+
+        .vs-text {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 10px;
+        }
 
         /* CONTROLES MOBILE */
         .mobile-controls {
@@ -94,234 +138,259 @@
         }
 
         .touch-btn {
-            width: 75px; height: 75px;
+            width: 75px;
+            height: 75px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             color: white;
             font-weight: bold;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             user-select: none;
             -webkit-user-select: none;
         }
 
-        .touch-btn:active { background: rgba(255, 255, 255, 0.3); }
+        .touch-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
 
-        .controls-hint { margin-top: 10px; color: #aaa; font-size: 0.85em; text-align: center; }
+        .controls-hint {
+            margin-top: 10px;
+            color: #aaa;
+            font-size: 0.85em;
+            text-align: center;
+        }
 
         @media (max-width: 768px) {
-            .mobile-controls { display: flex; }
-            .controls-hint { display: none; }
-            #game-container { margin-top: 50px; }
+            .mobile-controls {
+                display: flex;
+            }
+
+            .controls-hint {
+                display: none;
+            }
+
+            #game-container {
+                margin-top: 50px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-    <a href="index.html" class="nav-button-game"> < BACK </a>
+    <a href="index.html" class="nav-button-game">
+        < BACK </a>
 
-    <div id="game-container">
-        <div class="ui-panel">
-            <div class="icon-container">
-                <div class="icon-circle icon-spider">
-                    <img src="assets/icon-aranha.jpeg" alt="Ícone Aranha" width="100%">
+            <div id="game-container">
+                <div class="ui-panel">
+                    <div class="icon-container">
+                        <div class="icon-circle icon-spider">
+                            <img src="assets/icon-aranha.jpeg" alt="Ícone Aranha" width="100%">
+                        </div>
+                        <div class="health-bar">
+                            <div id="player-health" class="health-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="vs-text">VS</div>
+
+                    <div class="icon-container">
+                        <div class="health-bar">
+                            <div id="enemy-health" class="health-fill"></div>
+                        </div>
+                        <div class="icon-circle icon-goblin">
+                            <img src="assets/icon-duende.jpeg" alt="Ícone Duende" width="100%">
+                        </div>
+                    </div>
                 </div>
-                <div class="health-bar"><div id="player-health" class="health-fill"></div></div>
+                <canvas id="gameCanvas"></canvas>
             </div>
-            
-            <div class="vs-text">VS</div>
-            
-            <div class="icon-container">
-                <div class="health-bar"><div id="enemy-health" class="health-fill"></div></div>
-                <div class="icon-circle icon-goblin">
-                    <img src="assets/icon-duende.jpeg" alt="Ícone Duende" width="100%">
-                </div>
+
+            <div class="mobile-controls">
+                <div class="touch-btn" id="btn-swing">TEIA</div>
+                <div class="touch-btn" id="btn-shoot">TIRO</div>
             </div>
-        </div>
-        <canvas id="gameCanvas"></canvas>
-    </div>
 
-    <div class="mobile-controls">
-        <div class="touch-btn" id="btn-swing">TEIA</div>
-        <div class="touch-btn" id="btn-shoot">TIRO</div>
-    </div>
+            <div class="controls-hint">
+                <b>[ESPAÇO]</b> Balanço | <b>[F]</b> Atirar | <b>[R]</b> Reiniciar
+            </div>
 
-    <div class="controls-hint">
-        <b>[ESPAÇO]</b> Balanço | <b>[F]</b> Atirar | <b>[R]</b> Reiniciar
-    </div>
+            <script>
+                const canvas = document.getElementById('gameCanvas');
+                const ctx = canvas.getContext('2d');
+                // Resolução interna fixa
+                canvas.width = 800; canvas.height = 450;
 
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        // Resolução interna fixa
-        canvas.width = 800; canvas.height = 450;
+                const bgImg = new Image(); bgImg.src = 'assets/img-fundo3.png';
+                const spiderImg = new Image(); spiderImg.src = 'assets/icon-aranha.jpeg';
+                const goblinImg = new Image(); goblinImg.src = 'assets/icon-duende.jpeg';
 
-        const bgImg = new Image(); bgImg.src = 'assets/img-fundo3.png';
-        const spiderImg = new Image(); spiderImg.src = 'assets/icon-aranha.jpeg';
-        const goblinImg = new Image(); goblinImg.src = 'assets/icon-duende.jpeg';
-        
-        const bgMusic = new Audio('assets/high-speed.mp3');
-        bgMusic.loop = true; bgMusic.volume = 0.4;
+                const bgMusic = new Audio('assets/high-speed.mp3');
+                bgMusic.loop = true; bgMusic.volume = 0.4;
 
-        function startMusic() {
-            if (bgMusic.paused) {
-                bgMusic.play().catch(e => {});
-            }
-        }
-
-        const gravity = 0.55;
-        const friction = 0.985;
-        let gameActive = true;
-
-        const player = {
-            x: 100, y: 225, vx: 0, vy: 0, w: 55, h: 55,
-            health: 100, isSwinging: false, anchorX: 0, anchorY: 0,
-            ropeLen: 0, angle: 0, angleV: 0, projectiles: []
-        };
-
-        const boss = {
-            x: 600, y: 150, w: 75, h: 65,
-            health: 100, timer: 0, bombs: []
-        };
-
-        const keys = {};
-
-        // Funções de Ação
-        function startSwing() {
-            if(player.isSwinging) return;
-            player.anchorX = player.x + 120; 
-            player.anchorY = -20; 
-            let dx = player.x - player.anchorX;
-            let dy = player.y - player.anchorY;
-            let dist = Math.sqrt(dx*dx + dy*dy);
-            player.ropeLen = Math.min(dist, 260); 
-            player.angle = Math.atan2(dx, dy);
-            player.angleV = player.vx / player.ropeLen;
-            player.isSwinging = true;
-        }
-
-        function shootWebUp() {
-            if(!gameActive) { restartGame(); return; }
-            player.projectiles.push({ x: player.x + 25, y: player.y, vx: 16, vy: -14 });
-        }
-
-        function restartGame() {
-            player.health = 100; boss.health = 100;
-            player.x = 100; player.y = 225; player.vx = 0; player.vy = 0;
-            player.projectiles = []; boss.bombs = [];
-            document.getElementById('player-health').style.width = '100%';
-            document.getElementById('enemy-health').style.width = '100%';
-            gameActive = true; loop();
-        }
-
-        // Eventos Teclado
-        window.addEventListener('keydown', e => {
-            keys[e.code] = true;
-            startMusic();
-            if(e.code === 'Space') startSwing();
-            if(e.code === 'KeyF') shootWebUp();
-            if(e.code === 'KeyR' && !gameActive) restartGame();
-        });
-
-        window.addEventListener('keyup', e => { 
-            keys[e.code] = false; 
-            if(e.code === 'Space') player.isSwinging = false;
-        });
-
-        // Eventos Touch
-        const btnSwing = document.getElementById('btn-swing');
-        const btnShoot = document.getElementById('btn-shoot');
-
-        btnSwing.addEventListener('touchstart', (e) => { e.preventDefault(); startMusic(); startSwing(); });
-        btnSwing.addEventListener('touchend', (e) => { e.preventDefault(); player.isSwinging = false; });
-        btnShoot.addEventListener('touchstart', (e) => { e.preventDefault(); startMusic(); shootWebUp(); });
-
-        function update() {
-            if(!gameActive) return;
-
-            if (player.isSwinging) {
-                let gEff = gravity * Math.sin(player.angle);
-                player.angleV -= gEff / 25; 
-                player.angle += player.angleV;
-                player.angleV *= 0.998; 
-                player.x = player.anchorX + Math.sin(player.angle) * player.ropeLen;
-                player.y = player.anchorY + Math.cos(player.angle) * player.ropeLen;
-                player.vx = player.angleV * player.ropeLen;
-                player.vy = 0;
-            } else {
-                player.vy += gravity;
-                player.vx *= friction;
-                player.x += player.vx; player.y += player.vy;
-                if (player.y > canvas.height - 65) { player.y = canvas.height - 65; player.vy = 0; }
-            }
-
-            boss.timer += 0.04;
-            boss.y = 80 + Math.sin(boss.timer) * 60;
-            boss.x = 550 + Math.cos(boss.timer * 0.5) * 150;
-
-            if(Math.random() < 0.025) { 
-                boss.bombs.push({ x: boss.x + 20, y: boss.y + 30, vx: -6, vy: 2, r: 9 });
-            }
-
-            player.projectiles.forEach((p, i) => {
-                p.x += p.vx; p.y += p.vy;
-                if(p.x > boss.x && p.x < boss.x + boss.w && p.y > boss.y && p.y < boss.y + boss.h) {
-                    boss.health -= 8;
-                    player.projectiles.splice(i, 1);
+                function startMusic() {
+                    if (bgMusic.paused) {
+                        bgMusic.play().catch(e => { });
+                    }
                 }
-                if(p.x > canvas.width || p.y < 0) player.projectiles.splice(i, 1);
-            });
 
-            boss.bombs.forEach((b, i) => {
-                b.x += b.vx; b.y += b.vy; b.vy += 0.12;
-                let d = Math.hypot(b.x - (player.x + 25), b.y - (player.y + 25));
-                if(d < 28) { player.health -= 12; boss.bombs.splice(i, 1); }
-                if(b.y > canvas.height) boss.bombs.splice(i, 1);
-            });
+                const gravity = 0.55;
+                const friction = 0.985;
+                let gameActive = true;
 
-            document.getElementById('player-health').style.width = player.health + '%';
-            document.getElementById('enemy-health').style.width = boss.health + '%';
-            if(player.health <= 0 || boss.health <= 0) gameActive = false;
-        }
+                const player = {
+                    x: 100, y: 225, vx: 0, vy: 0, w: 55, h: 55,
+                    health: 100, isSwinging: false, anchorX: 0, anchorY: 0,
+                    ropeLen: 0, angle: 0, angleV: 0, projectiles: []
+                };
 
-        function draw() {
-            ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+                const boss = {
+                    x: 600, y: 150, w: 75, h: 65,
+                    health: 100, timer: 0, bombs: []
+                };
 
-            if (player.isSwinging) {
-                ctx.strokeStyle = "rgba(255,255,255,0.8)"; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(player.anchorX, player.anchorY);
-                ctx.lineTo(player.x + 25, player.y + 20); ctx.stroke();
-            }
+                const keys = {};
 
-            ctx.fillStyle = "white";
-            player.projectiles.forEach(p => {
-                ctx.save(); ctx.translate(p.x, p.y);
-                ctx.rotate(Math.atan2(p.vy, p.vx));
-                ctx.fillRect(0, 0, 20, 5); ctx.restore();
-            });
+                // Funções de Ação
+                function startSwing() {
+                    if (player.isSwinging) return;
+                    player.anchorX = player.x + 120;
+                    player.anchorY = -20;
+                    let dx = player.x - player.anchorX;
+                    let dy = player.y - player.anchorY;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    player.ropeLen = Math.min(dist, 260);
+                    player.angle = Math.atan2(dx, dy);
+                    player.angleV = player.vx / player.ropeLen;
+                    player.isSwinging = true;
+                }
 
-            ctx.drawImage(spiderImg, player.x, player.y, player.w, player.h);
-            ctx.drawImage(goblinImg, boss.x, boss.y, boss.w, boss.h);
+                function shootWebUp() {
+                    if (!gameActive) { restartGame(); return; }
+                    player.projectiles.push({ x: player.x + 25, y: player.y, vx: 16, vy: -14 });
+                }
 
-            ctx.fillStyle = "#ff8800";
-            boss.bombs.forEach(b => {
-                ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fill();
-                ctx.fillStyle = "green"; ctx.fillRect(b.x-2, b.y-12, 4, 6);
-                ctx.fillStyle = "#ff8800";
-            });
+                function restartGame() {
+                    player.health = 100; boss.health = 100;
+                    player.x = 100; player.y = 225; player.vx = 0; player.vy = 0;
+                    player.projectiles = []; boss.bombs = [];
+                    document.getElementById('player-health').style.width = '100%';
+                    document.getElementById('enemy-health').style.width = '100%';
+                    gameActive = true; loop();
+                }
 
-            if(!gameActive) {
-                ctx.fillStyle = "rgba(0,0,0,0.85)"; ctx.fillRect(0,0, canvas.width, canvas.height);
-                ctx.fillStyle = "white"; ctx.font = "bold 30px Arial"; ctx.textAlign = "center";
-                let msg = player.health > 0 ? "VITÓRIA!" : "DERROTA!";
-                ctx.fillText(msg, canvas.width/2, canvas.height/2);
-                ctx.font = "18px Arial"; 
-                ctx.fillText("Toque em TIRO ou pressione R para reiniciar", canvas.width/2, canvas.height/2 + 40);
-            }
-        }
+                // Eventos Teclado
+                window.addEventListener('keydown', e => {
+                    keys[e.code] = true;
+                    startMusic();
+                    if (e.code === 'Space') startSwing();
+                    if (e.code === 'KeyF') shootWebUp();
+                    if (e.code === 'KeyR' && !gameActive) restartGame();
+                });
 
-        function loop() { update(); draw(); if(gameActive) requestAnimationFrame(loop); }
-        bgImg.onload = () => { loop(); };
-    </script>
+                window.addEventListener('keyup', e => {
+                    keys[e.code] = false;
+                    if (e.code === 'Space') player.isSwinging = false;
+                });
+
+                // Eventos Touch
+                const btnSwing = document.getElementById('btn-swing');
+                const btnShoot = document.getElementById('btn-shoot');
+
+                btnSwing.addEventListener('touchstart', (e) => { e.preventDefault(); startMusic(); startSwing(); });
+                btnSwing.addEventListener('touchend', (e) => { e.preventDefault(); player.isSwinging = false; });
+                btnShoot.addEventListener('touchstart', (e) => { e.preventDefault(); startMusic(); shootWebUp(); });
+
+                function update() {
+                    if (!gameActive) return;
+
+                    if (player.isSwinging) {
+                        let gEff = gravity * Math.sin(player.angle);
+                        player.angleV -= gEff / 25;
+                        player.angle += player.angleV;
+                        player.angleV *= 0.998;
+                        player.x = player.anchorX + Math.sin(player.angle) * player.ropeLen;
+                        player.y = player.anchorY + Math.cos(player.angle) * player.ropeLen;
+                        player.vx = player.angleV * player.ropeLen;
+                        player.vy = 0;
+                    } else {
+                        player.vy += gravity;
+                        player.vx *= friction;
+                        player.x += player.vx; player.y += player.vy;
+                        if (player.y > canvas.height - 65) { player.y = canvas.height - 65; player.vy = 0; }
+                    }
+
+                    boss.timer += 0.04;
+                    boss.y = 80 + Math.sin(boss.timer) * 60;
+                    boss.x = 550 + Math.cos(boss.timer * 0.5) * 150;
+
+                    if (Math.random() < 0.025) {
+                        boss.bombs.push({ x: boss.x + 20, y: boss.y + 30, vx: -6, vy: 2, r: 9 });
+                    }
+
+                    player.projectiles.forEach((p, i) => {
+                        p.x += p.vx; p.y += p.vy;
+                        if (p.x > boss.x && p.x < boss.x + boss.w && p.y > boss.y && p.y < boss.y + boss.h) {
+                            boss.health -= 8;
+                            player.projectiles.splice(i, 1);
+                        }
+                        if (p.x > canvas.width || p.y < 0) player.projectiles.splice(i, 1);
+                    });
+
+                    boss.bombs.forEach((b, i) => {
+                        b.x += b.vx; b.y += b.vy; b.vy += 0.12;
+                        let d = Math.hypot(b.x - (player.x + 25), b.y - (player.y + 25));
+                        if (d < 28) { player.health -= 12; boss.bombs.splice(i, 1); }
+                        if (b.y > canvas.height) boss.bombs.splice(i, 1);
+                    });
+
+                    document.getElementById('player-health').style.width = player.health + '%';
+                    document.getElementById('enemy-health').style.width = boss.health + '%';
+                    if (player.health <= 0 || boss.health <= 0) gameActive = false;
+                }
+
+                function draw() {
+                    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+
+                    if (player.isSwinging) {
+                        ctx.strokeStyle = "rgba(255,255,255,0.8)"; ctx.lineWidth = 2;
+                        ctx.beginPath(); ctx.moveTo(player.anchorX, player.anchorY);
+                        ctx.lineTo(player.x + 25, player.y + 20); ctx.stroke();
+                    }
+
+                    ctx.fillStyle = "white";
+                    player.projectiles.forEach(p => {
+                        ctx.save(); ctx.translate(p.x, p.y);
+                        ctx.rotate(Math.atan2(p.vy, p.vx));
+                        ctx.fillRect(0, 0, 20, 5); ctx.restore();
+                    });
+
+                    ctx.drawImage(spiderImg, player.x, player.y, player.w, player.h);
+                    ctx.drawImage(goblinImg, boss.x, boss.y, boss.w, boss.h);
+
+                    ctx.fillStyle = "#ff8800";
+                    boss.bombs.forEach(b => {
+                        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
+                        ctx.fillStyle = "green"; ctx.fillRect(b.x - 2, b.y - 12, 4, 6);
+                        ctx.fillStyle = "#ff8800";
+                    });
+
+                    if (!gameActive) {
+                        ctx.fillStyle = "rgba(0,0,0,0.85)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = "white"; ctx.font = "bold 30px Arial"; ctx.textAlign = "center";
+                        let msg = player.health > 0 ? "VITÓRIA!" : "DERROTA!";
+                        ctx.fillText(msg, canvas.width / 2, canvas.height / 2);
+                        ctx.font = "18px Arial";
+                        ctx.fillText("Toque em TIRO ou pressione R para reiniciar", canvas.width / 2, canvas.height / 2 + 40);
+                    }
+                }
+
+                function loop() { update(); draw(); if (gameActive) requestAnimationFrame(loop); }
+                bgImg.onload = () => { loop(); };
+            </script>
 </body>
+
 </html>

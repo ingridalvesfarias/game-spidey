@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -22,7 +23,7 @@
             touch-action: none;
         }
 
-        /* BOTÃO BACK AJUSTADO */
+        /* BOTÃO BACK */
         .nav-button-game {
             position: absolute;
             top: 15px;
@@ -78,8 +79,11 @@
             pointer-events: none;
         }
 
-        .hud-side { display: flex; align-items: center; }
-        
+        .hud-side {
+            display: flex;
+            align-items: center;
+        }
+
         .icon {
             width: clamp(35px, 10vw, 65px);
             height: clamp(35px, 10vw, 65px);
@@ -88,22 +92,47 @@
             border: 2px solid #fff;
         }
 
-        .player-icon { background-image: url('assets/icon-aranha.jpeg'); box-shadow: 0 0 15px #ff0000; margin-right: 10px; }
-        .boss-icon { background-image: url('assets/icon-duende.jpeg'); box-shadow: 0 0 15px #00ff00; margin-left: 10px; }
+        .player-icon {
+            background-image: url('assets/icon-aranha.jpeg');
+            box-shadow: 0 0 15px #ff0000;
+            margin-right: 10px;
+        }
+
+        .boss-icon {
+            background-image: url('assets/icon-duende.jpeg');
+            box-shadow: 0 0 15px #00ff00;
+            margin-left: 10px;
+        }
 
         .bar-container {
             width: clamp(80px, 20vw, 220px);
             height: 18px;
             border: 2px solid #fff;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             transform: skew(-15deg);
         }
 
-        .hp-bar { height: 100%; transition: width 0.3s ease; }
-        #player-hp { background: #ff0000; width: 100%; }
-        #boss-hp { background: #00ff00; width: 100%; float: right; }
+        .hp-bar {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
 
-        #vs-tag { font-size: clamp(20px, 5vw, 32px); margin: 0 15px; text-shadow: 2px 2px #000; }
+        #player-hp {
+            background: #ff0000;
+            width: 100%;
+        }
+
+        #boss-hp {
+            background: #00ff00;
+            width: 100%;
+            float: right;
+        }
+
+        #vs-tag {
+            font-size: clamp(20px, 5vw, 32px);
+            margin: 0 15px;
+            text-shadow: 2px 2px #000;
+        }
 
         /* CONTROLES MOBILE - APENAS EM TELAS PEQUENAS */
         #mobile-controls {
@@ -124,19 +153,27 @@
         }
 
         .btn-touch {
-            width: 55px; height: 55px;
+            width: 55px;
+            height: 55px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
             user-select: none;
         }
 
-        .btn-touch:active { background: rgba(255, 0, 0, 0.4); border-color: #ff0000; }
+        .btn-touch:active {
+            background: rgba(255, 0, 0, 0.4);
+            border-color: #ff0000;
+        }
 
         .btn-attack {
-            width: 80px; height: 80px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: #ff0000;
             color: white;
@@ -150,7 +187,7 @@
         #end-screen {
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.9);
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -158,9 +195,21 @@
             z-index: 100;
         }
 
-        .victory-title { font-size: clamp(40px, 15vw, 90px); margin: 0; text-align: center; }
-        .spider-wins { color: #ff0000; text-shadow: 0 0 30px #ff0000; }
-        .duende-wins { color: #00ff00; text-shadow: 0 0 30px #00ff00; }
+        .victory-title {
+            font-size: clamp(40px, 15vw, 90px);
+            margin: 0;
+            text-align: center;
+        }
+
+        .spider-wins {
+            color: #ff0000;
+            text-shadow: 0 0 30px #ff0000;
+        }
+
+        .duende-wins {
+            color: #00ff00;
+            text-shadow: 0 0 30px #00ff00;
+        }
 
         .btn-restart {
             margin-top: 20px;
@@ -174,202 +223,221 @@
             transform: skew(-15deg);
         }
 
-        #controls-info { margin-top: 15px; font-size: 16px; color: #888; }
+        #controls-info {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #888;
+        }
 
         @media (max-width: 768px) {
-            #mobile-controls { display: flex; }
-            #controls-info { display: none; }
-            .nav-button-game { font-size: 14px; padding: 6px 15px; }
+            #mobile-controls {
+                display: flex;
+            }
+
+            #controls-info {
+                display: none;
+            }
+
+            .nav-button-game {
+                font-size: 14px;
+                padding: 6px 15px;
+            }
         }
     </style>
 </head>
+
 <body onclick="unlockAudio()" onkeydown="unlockAudio()">
 
-    <a href="index.html" class="nav-button-game"> < BACK </a>
+    <a href="index.html" class="nav-button-game">
+        < BACK </a>
 
-    <div id="game-wrapper">
-        <div id="hud">
-            <div class="hud-side">
-                <div class="icon player-icon"></div>
-                <div class="bar-container"><div id="player-hp" class="hp-bar"></div></div>
+            <div id="game-wrapper">
+                <div id="hud">
+                    <div class="hud-side">
+                        <div class="icon player-icon"></div>
+                        <div class="bar-container">
+                            <div id="player-hp" class="hp-bar"></div>
+                        </div>
+                    </div>
+                    <div id="vs-tag">VS</div>
+                    <div class="hud-side">
+                        <div class="bar-container">
+                            <div id="boss-hp" class="hp-bar"></div>
+                        </div>
+                        <div class="icon boss-icon"></div>
+                    </div>
+                </div>
+
+                <div id="end-screen">
+                    <h1 id="winner-message" class="victory-title"></h1>
+                    <button class="btn-restart" onclick="location.reload()">PLAY AGAIN</button>
+                </div>
+
+                <canvas id="gameCanvas"></canvas>
             </div>
-            <div id="vs-tag">VS</div>
-            <div class="hud-side">
-                <div class="bar-container"><div id="boss-hp" class="hp-bar"></div></div>
-                <div class="icon boss-icon"></div>
+
+            <div id="mobile-controls">
+                <div class="d-pad">
+                    <div class="btn-touch" style="grid-area: up" id="m-up">▲</div>
+                    <div class="btn-touch" style="grid-area: left" id="m-left">◀</div>
+                    <div class="btn-touch" style="grid-area: right" id="m-right">▶</div>
+                    <div class="btn-touch" style="grid-area: down" id="m-down">▼</div>
+                </div>
+                <button class="btn-attack" id="m-attack">WEB</button>
             </div>
-        </div>
 
-        <div id="end-screen">
-            <h1 id="winner-message" class="victory-title"></h1>
-            <button class="btn-restart" onclick="location.reload()">PLAY AGAIN</button>
-        </div>
+            <div id="controls-info">
+                [W][A][S][D] Move | [F] Atacar
+            </div>
 
-        <canvas id="gameCanvas"></canvas>
-    </div>
+            <audio id="bgMusic" loop>
+                <source src="assets/cuphead-style.mp3" type="audio/mpeg">
+            </audio>
 
-    <div id="mobile-controls">
-        <div class="d-pad">
-            <div class="btn-touch" style="grid-area: up" id="m-up">▲</div>
-            <div class="btn-touch" style="grid-area: left" id="m-left">◀</div>
-            <div class="btn-touch" style="grid-area: right" id="m-right">▶</div>
-            <div class="btn-touch" style="grid-area: down" id="m-down">▼</div>
-        </div>
-        <button class="btn-attack" id="m-attack">WEB</button>
-    </div>
+            <script>
+                const canvas = document.getElementById('gameCanvas');
+                const ctx = canvas.getContext('2d');
+                const bgMusic = document.getElementById('bgMusic');
 
-    <div id="controls-info">
-        W/A/S/D - Move | F - Atacar
-    </div>
+                canvas.width = 800;
+                canvas.height = 500;
 
-    <audio id="bgMusic" loop>
-        <source src="assets/cuphead-style.mp3" type="audio/mpeg">
-    </audio>
+                let gameRunning = true;
+                let musicStarted = false;
+                let frame = 0;
+                const keys = {};
+                const webs = [];
+                const bombs = [];
 
-<script>
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const bgMusic = document.getElementById('bgMusic');
+                const imgBG = new Image(); imgBG.src = 'assets/img-fundo4.png';
 
-// Resolução lógica fixa para manter a física igual em qualquer tela
-canvas.width = 800;
-canvas.height = 500;
+                const player = { x: 100, y: 350, radius: 25, hp: 100, speed: 7 };
+                const boss = { x: 600, y: 200, size: 40, hp: 100, angle: 0 };
 
-let gameRunning = true;
-let musicStarted = false;
-let frame = 0;
-const keys = {};
-const webs = [];
-const bombs = [];
+                function unlockAudio() {
+                    if (!musicStarted) {
+                        bgMusic.play().then(() => musicStarted = true).catch(() => { });
+                    }
+                }
 
-const imgBG = new Image(); imgBG.src = 'assets/img-fundo4.png';
+                // Teclado
+                window.addEventListener('keydown', e => {
+                    keys[e.code] = true;
+                    if (e.code === 'KeyF' && gameRunning) shootWeb();
+                });
+                window.addEventListener('keyup', e => keys[e.code] = false);
 
-const player = { x: 100, y: 350, radius: 25, hp: 100, speed: 7 };
-const boss = { x: 600, y: 200, size: 40, hp: 100, angle: 0 };
+                // Touch Controls
+                const setupTouch = (id, key) => {
+                    const el = document.getElementById(id);
+                    el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; unlockAudio(); });
+                    el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
+                };
+                setupTouch('m-up', 'KeyW');
+                setupTouch('m-down', 'KeyS');
+                setupTouch('m-left', 'KeyA');
+                setupTouch('m-right', 'KeyD');
 
-function unlockAudio() {
-    if (!musicStarted) {
-        bgMusic.play().then(() => musicStarted = true).catch(() => {});
-    }
-}
+                document.getElementById('m-attack').addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    if (gameRunning) shootWeb();
+                });
 
-// Teclado
-window.addEventListener('keydown', e => {
-    keys[e.code] = true;
-    if (e.code === 'KeyF' && gameRunning) shootWeb();
-});
-window.addEventListener('keyup', e => keys[e.code] = false);
+                function shootWeb() {
+                    webs.push({ x: player.x + player.radius, y: player.y, s: 15 });
+                }
 
-// Touch Controls
-const setupTouch = (id, key) => {
-    const el = document.getElementById(id);
-    el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; unlockAudio(); });
-    el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
-};
-setupTouch('m-up', 'KeyW');
-setupTouch('m-down', 'KeyS');
-setupTouch('m-left', 'KeyA');
-setupTouch('m-right', 'KeyD');
+                function showResult(msg, isSpider) {
+                    gameRunning = false;
+                    const screen = document.getElementById('end-screen');
+                    const text = document.getElementById('winner-message');
+                    text.innerText = msg;
+                    text.className = isSpider ? 'victory-title spider-wins' : 'victory-title duende-wins';
+                    screen.style.display = 'flex';
+                }
 
-document.getElementById('m-attack').addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    if(gameRunning) shootWeb();
-});
+                function update() {
+                    if (!gameRunning) return;
+                    frame++;
 
-function shootWeb() {
-    webs.push({ x: player.x + player.radius, y: player.y, s: 15 });
-}
+                    if (keys['KeyW'] && player.y > 80) player.y -= player.speed;
+                    if (keys['KeyS'] && player.y < canvas.height - 40) player.y += player.speed;
+                    if (keys['KeyA'] && player.x > 40) player.x -= player.speed;
+                    if (keys['KeyD'] && player.x < 380) player.x += player.speed;
 
-function showResult(msg, isSpider) {
-    gameRunning = false;
-    const screen = document.getElementById('end-screen');
-    const text = document.getElementById('winner-message');
-    text.innerText = msg;
-    text.className = isSpider ? 'victory-title spider-wins' : 'victory-title duende-wins';
-    screen.style.display = 'flex';
-}
+                    boss.angle += 0.045;
+                    boss.x = 550 + Math.sin(boss.angle) * 160;
+                    boss.y = 220 + Math.sin(boss.angle * 2.2) * 140;
 
-function update() {
-    if (!gameRunning) return;
-    frame++;
+                    if (frame % 40 === 0) {
+                        bombs.push({ x: boss.x, y: boss.y, vx: -9, vy: (Math.random() - 0.5) * 8 });
+                    }
 
-    if (keys['KeyW'] && player.y > 80) player.y -= player.speed;
-    if (keys['KeyS'] && player.y < canvas.height - 40) player.y += player.speed;
-    if (keys['KeyA'] && player.x > 40) player.x -= player.speed;
-    if (keys['KeyD'] && player.x < 380) player.x += player.speed;
+                    webs.forEach((web, i) => {
+                        web.x += web.s;
+                        let dx = web.x - boss.x;
+                        let dy = web.y - boss.y;
+                        if (Math.sqrt(dx * dx + dy * dy) < boss.size) {
+                            boss.hp -= 3;
+                            webs.splice(i, 1);
+                            document.getElementById('boss-hp').style.width = Math.max(0, boss.hp) + "%";
+                        }
+                    });
 
-    boss.angle += 0.045;
-    boss.x = 550 + Math.sin(boss.angle) * 160;
-    boss.y = 220 + Math.sin(boss.angle * 2.2) * 140;
+                    bombs.forEach((bomb, i) => {
+                        bomb.x += bomb.vx; bomb.y += bomb.vy;
+                        let dx = bomb.x - player.x;
+                        let dy = bomb.y - player.y;
+                        if (Math.sqrt(dx * dx + dy * dy) < player.radius + 10) {
+                            player.hp -= 12;
+                            bombs.splice(i, 1);
+                            document.getElementById('player-hp').style.width = Math.max(0, player.hp) + "%";
+                        }
+                        if (bomb.x < -20) bombs.splice(i, 1);
+                    });
 
-    if (frame % 40 === 0) {
-        bombs.push({ x: boss.x, y: boss.y, vx: -9, vy: (Math.random() - 0.5) * 8 });
-    }
+                    if (boss.hp <= 0) showResult("SPIDER-MAN WINS!", true);
+                    if (player.hp <= 0) showResult("DUENDE WINS!", false);
+                }
 
-    webs.forEach((web, i) => {
-        web.x += web.s;
-        let dx = web.x - boss.x;
-        let dy = web.y - boss.y;
-        if (Math.sqrt(dx*dx + dy*dy) < boss.size) {
-            boss.hp -= 3;
-            webs.splice(i, 1);
-            document.getElementById('boss-hp').style.width = Math.max(0, boss.hp) + "%";
-        }
-    });
+                function draw() {
+                    ctx.drawImage(imgBG, 0, 0, canvas.width, canvas.height);
 
-    bombs.forEach((bomb, i) => {
-        bomb.x += bomb.vx; bomb.y += bomb.vy;
-        let dx = bomb.x - player.x;
-        let dy = bomb.y - player.y;
-        if (Math.sqrt(dx*dx + dy*dy) < player.radius + 10) {
-            player.hp -= 12;
-            bombs.splice(i, 1);
-            document.getElementById('player-hp').style.width = Math.max(0, player.hp) + "%";
-        }
-        if (bomb.x < -20) bombs.splice(i, 1);
-    });
+                    // Player
+                    ctx.shadowBlur = 15; ctx.shadowColor = "red";
+                    ctx.fillStyle = "#ff0000";
+                    ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2); ctx.fill();
+                    ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke();
 
-    if (boss.hp <= 0) showResult("SPIDER-MAN WINS!", true);
-    if (player.hp <= 0) showResult("DUENDE WINS!", false);
-}
+                    // Boss
+                    ctx.shadowColor = "#0f0";
+                    ctx.fillStyle = "#2e8b57";
+                    ctx.beginPath();
+                    ctx.moveTo(boss.x + boss.size, boss.y);
+                    ctx.lineTo(boss.x - boss.size, boss.y - boss.size);
+                    ctx.lineTo(boss.x - boss.size, boss.y + boss.size);
+                    ctx.closePath(); ctx.fill();
+                    ctx.strokeStyle = "yellow"; ctx.stroke();
 
-function draw() {
-    ctx.drawImage(imgBG, 0, 0, canvas.width, canvas.height);
+                    // Web / Attacks
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = "#fff";
+                    webs.forEach(w => ctx.fillRect(w.x, w.y - 3, 22, 6));
 
-    // Player
-    ctx.shadowBlur = 15; ctx.shadowColor = "red";
-    ctx.fillStyle = "#ff0000";
-    ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke();
+                    ctx.fillStyle = "#ffa500";
+                    bombs.forEach(b => {
+                        ctx.beginPath(); ctx.arc(b.x, b.y, 12, 0, Math.PI * 2); ctx.fill();
+                    });
+                }
 
-    // Boss
-    ctx.shadowColor = "#0f0";
-    ctx.fillStyle = "#2e8b57";
-    ctx.beginPath();
-    ctx.moveTo(boss.x + boss.size, boss.y);
-    ctx.lineTo(boss.x - boss.size, boss.y - boss.size);
-    ctx.lineTo(boss.x - boss.size, boss.y + boss.size);
-    ctx.closePath(); ctx.fill();
-    ctx.strokeStyle = "yellow"; ctx.stroke();
-    
-    // Web / Attacks
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = "#fff";
-    webs.forEach(w => ctx.fillRect(w.x, w.y - 3, 22, 6));
+                function loop() {
+                    update();
+                    draw();
+                    requestAnimationFrame(loop);
+                }
 
-    ctx.fillStyle = "#ffa500";
-    bombs.forEach(b => {
-        ctx.beginPath(); ctx.arc(b.x, b.y, 12, 0, Math.PI * 2); ctx.fill();
-    });
-}
-
-function loop() {
-    update();
-    draw();
-    requestAnimationFrame(loop);
-}
-
-imgBG.onload = () => loop();
-</script>
+                imgBG.onload = () => loop();
+            </script>
 </body>
+
 </html>

@@ -50,3 +50,13 @@ O projeto foi otimizado para **PC** e **Mobile**:
 ## 🎨 Como rodar o projeto
 
 Acesse: https://game-spidey.vercel.app/
+
+## ⚖️ Licença
+
+Este projeto é licenciado sob a Licença MIT - consulte o arquivo [LICENSE](LICENSE) para detalhes.
+
+### ⚠️ Aviso Legal
+Este é um projeto desenvolvido exclusivamente para fins de **estudo e portfólio**. Os personagens, nomes e imagens utilizados são de propriedade intelectual da **Marvel/Sony**. Não há intenção de infração de direitos autorais ou uso comercial.
+
+---
+Desenvolvido com ❤️ e muita teia! 🕸️

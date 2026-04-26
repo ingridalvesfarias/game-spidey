@@ -49,4 +49,4 @@ O projeto foi otimizado para **PC** e **Mobile**:
 
 ## 🎨 Como rodar o projeto
 
-Acesse: 
+Acesse: https://game-spidey.vercel.app/

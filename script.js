@@ -1,6 +1,16 @@
+// === CONFIGURAÇÃO DE ÁUDIO ===
+const musicaSelect = new Audio('./assets/musica-select.mp3');
+musicaSelect.loop = true;
+musicaSelect.volume = 0.5;
+
+function tentarTocarMusica() {
+    musicaSelect.play().catch(() => {
+        console.log("Áudio aguardando interação do usuário...");
+    });
+}
+
 // === INICIALIZAÇÃO ===
 window.onload = () => {
-    // Inicia a música em qualquer carregamento/volta
     tentarTocarMusica();
 
     if (sessionStorage.getItem('hub_loaded')) {
@@ -9,25 +19,6 @@ window.onload = () => {
         startLoading();
     }
 };
-
-// Caminho do áudio
-const musicaSelect = new Audio('./assets/musica-select.mp3');
-musicaSelect.loop = true;
-musicaSelect.volume = 0.5; // Volume moderado
-
-// Função persistente para tocar a música
-function tentarTocarMusica() {
-    musicaSelect.play().catch(() => {
-        // Se o navegador bloquear, ele tentará tocar no primeiro clique ou tecla
-        const iniciarAoInteragir = () => {
-            musicaSelect.play();
-            window.removeEventListener('click', iniciarAoInteragir);
-            window.removeEventListener('keydown', iniciarAoInteragir);
-        };
-        window.addEventListener('click', iniciarAoInteragir);
-        window.addEventListener('keydown', iniciarAoInteragir);
-    });
-}
 
 function startLoading() {
     let progress = 0;
@@ -40,15 +31,15 @@ function startLoading() {
         if (progress >= 100) {
             progress = 100;
             clearInterval(interval);
-            status.innerText = "100%";
-            fill.style.width = "100%";
-            completeMsg.classList.remove('hidden');
+            if (status) status.innerText = "100%";
+            if (fill) fill.style.width = "100%";
+            if (completeMsg) completeMsg.classList.remove('hidden');
 
             sessionStorage.setItem('hub_loaded', 'true');
             setTimeout(goToTitleScreen, 1500);
         }
-        fill.style.width = `${progress}%`;
-        status.innerText = `${progress}%`;
+        if (fill) fill.style.width = `${progress}%`;
+        if (status) status.innerText = `${progress}%`;
     }, 90);
 }
 
@@ -65,14 +56,25 @@ function showScreen(screenId) {
 
 function goToTitleScreen() {
     showScreen('start-screen');
-    tentarTocarMusica();
-    window.addEventListener('keydown', handleStart);
-    window.addEventListener('click', handleStart);
-}
-
-function handleStart() {
+    
+    // Remove eventos antigos antes de adicionar novos (evita disparos duplos)
     window.removeEventListener('keydown', handleStart);
     window.removeEventListener('click', handleStart);
+    window.removeEventListener('touchstart', handleStart);
+
+    window.addEventListener('keydown', handleStart);
+    window.addEventListener('click', handleStart);
+    window.addEventListener('touchstart', handleStart, { passive: false });
+}
+
+function handleStart(e) {
+    // Se for touch, evita que o navegador simule um clique logo em seguida
+    if (e.type === 'touchstart') e.preventDefault();
+
+    window.removeEventListener('keydown', handleStart);
+    window.removeEventListener('click', handleStart);
+    window.removeEventListener('touchstart', handleStart);
+    
     tentarTocarMusica();
     goToMenuSelection();
 }
@@ -90,52 +92,54 @@ function goToMenuSelection() {
 
     let selectedGame = "classic";
 
-    // === LÓGICA DO CARROSSEL (MOBILE) ===
-    if (prevBtn && nextBtn && carousel) {
-        prevBtn.onclick = () => {
-            const scrollAmount = carousel.offsetWidth * 0.7;
-            carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-        };
-
-        nextBtn.onclick = () => {
-            const scrollAmount = carousel.offsetWidth * 0.7;
-            carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        };
-    }
-
-    // Seleção de cards
-    cards.forEach(card => {
-        card.onclick = () => {
-            cards.forEach(c => c.classList.remove('active'));
-            card.classList.add('active');
-            selectedGame = card.getAttribute('data-game');
-        };
-    });
-
-    // Botão Voltar(BACK)
+    // === LÓGICA DO VOLTAR (BACK) ===
     if (btnBack) {
-        btnBack.replaceWith(btnBack.cloneNode(true));
-        const newBtnBack = document.getElementById('btn-back');
-        newBtnBack.onclick = (e) => {
+        const acaoVoltar = (e) => {
             e.preventDefault();
             e.stopPropagation();
             goToTitleScreen();
         };
+        btnBack.onclick = acaoVoltar;
+        btnBack.addEventListener('touchstart', acaoVoltar, { passive: false });
     }
 
-    // Botão Selecionar
+    // === LÓGICA DO SELECIONAR (SELECT) ===
     if (btnSelect) {
-        btnSelect.onclick = () => {
+        const acaoJogar = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const pages = {
                 'classic': 'classic.html',
                 'venom': 'venom.html',
                 'air': 'air_battle.html',
                 'boss': 'boss_fight.html'
             };
-
             if (pages[selectedGame]) {
                 window.location.href = pages[selectedGame];
             }
         };
+        btnSelect.onclick = acaoJogar;
+        btnSelect.addEventListener('touchstart', acaoJogar, { passive: false });
     }
+
+    // === LÓGICA DO CARROSSEL ===
+    if (prevBtn && nextBtn && carousel) {
+        const mover = (direcao) => {
+            const scrollAmount = carousel.offsetWidth * 0.8;
+            carousel.scrollBy({ left: direcao * scrollAmount, behavior: 'smooth' });
+        };
+        prevBtn.onclick = () => mover(-1);
+        nextBtn.onclick = () => mover(1);
+    }
+
+    // === SELEÇÃO DE CARDS ===
+    cards.forEach(card => {
+        const selecionar = (e) => {
+            cards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            selectedGame = card.getAttribute('data-game');
+        };
+        card.onclick = selecionar;
+        card.addEventListener('touchstart', selecionar, { passive: true });
+    });
 }

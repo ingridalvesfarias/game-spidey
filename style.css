@@ -94,7 +94,7 @@ body {
 /* === BOTÃO BACK === */
 .nav-button {
     position: absolute;
-    top: 30px;
+    top: 25px;
     left: 30px;
     background: #000;
     border: 1px solid var(--vermelho-neon);

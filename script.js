@@ -57,7 +57,6 @@ function showScreen(screenId) {
 function goToTitleScreen() {
     showScreen('start-screen');
     
-    // Remove eventos antigos antes de adicionar novos (evita disparos duplos)
     window.removeEventListener('keydown', handleStart);
     window.removeEventListener('click', handleStart);
     window.removeEventListener('touchstart', handleStart);

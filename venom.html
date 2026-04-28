@@ -238,7 +238,6 @@
             background: var(--roxo-venom) !important;
         }
 
-        /* MENU DE CONTROLES */
         #controls-info {
             margin-top: 15px;
             font-size: 20px;
@@ -328,8 +327,8 @@
             <script>
                 const canvas = document.getElementById("gameCanvas");
                 const ctx = canvas.getContext("2d");
-                canvas.width = 800;
-                canvas.height = 450;
+                canvas.width = 600;
+                canvas.height = 350;
 
                 const fundoImg = new Image(); fundoImg.src = 'assets/img-fundo2.png';
                 const aranhaImg = new Image(); aranhaImg.src = 'assets/spidey-game2.png';
@@ -351,8 +350,10 @@
                 function startGame() {
                     document.getElementById('start-overlay').style.display = 'none';
                     musicaFundo.play().catch(e => console.log("Erro audio:", e));
-                    jogoAtivo = true;
-                    loop();
+                    if (!jogoAtivo) {
+                        jogoAtivo = true;
+                        loop();
+                    }
                 }
 
                 function resetJogo() {
@@ -362,7 +363,11 @@
                     document.getElementById('aranha-health').style.width = "100%";
                     document.getElementById('venom-health').style.width = "100%";
                     document.getElementById('vitoria-msg-container').style.display = 'none';
-                    jogoAtivo = true;
+
+                    if (!jogoAtivo) {
+                        jogoAtivo = true;
+                        loop();
+                    }
                 }
 
                 function loop() {
@@ -466,6 +471,8 @@
                     const el = document.getElementById(id);
                     el.addEventListener('touchstart', (e) => { e.preventDefault(); if (jogoAtivo) start(); });
                     if (end) el.addEventListener('touchend', (e) => { e.preventDefault(); end(); });
+                    el.addEventListener('mousedown', (e) => { if (jogoAtivo) start(); });
+                    if (end) el.addEventListener('mouseup', (e) => { end(); });
                 };
                 bindBtn('btn-esquerda', () => keys.a = true, () => keys.a = false);
                 bindBtn('btn-direita', () => keys.d = true, () => keys.d = false);

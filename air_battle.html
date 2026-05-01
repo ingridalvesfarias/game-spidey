@@ -311,7 +311,7 @@
                 const spiderImg = new Image(); spiderImg.src = 'assets/spidey-game3.png';
                 const goblinImg = new Image(); goblinImg.src = 'assets/green-goblin.png';
 
-                let gameActive = false; 
+                let gameActive = false;
                 const gravity = 0.6;
                 const friction = 0.985;
 
@@ -326,7 +326,6 @@
                     health: 100, timer: 0, bombs: []
                 };
 
-                // FUNÇÃO DE INÍCIO
                 function startGame() {
                     document.getElementById('start-overlay').style.display = 'none';
                     bgMusic.play().catch(e => console.log("Aguardando interação..."));
@@ -336,13 +335,10 @@
 
                 function startSwing() {
                     if (player.isSwinging || !gameActive) return;
-
                     player.anchorX = player.x + 200;
                     player.anchorY = -250;
-
                     let dx = player.x - player.anchorX;
                     let dy = player.y - player.anchorY;
-
                     player.ropeLen = Math.min(Math.hypot(dx, dy), 400);
                     player.angle = Math.atan2(dx, dy);
                     player.angleV = player.vx / player.ropeLen;
@@ -395,10 +391,7 @@
                         player.vx *= friction;
                         player.x += player.vx; player.y += player.vy;
 
-                        if (player.y > canvas.height - 110) {
-                            player.y = canvas.height - 110;
-                            player.vy = 0;
-                        }
+                        if (player.y > canvas.height - 110) { player.y = canvas.height - 110; player.vy = 0; }
                         if (player.y < 0) { player.y = 0; player.vy = 0; }
                         if (player.x < 0) player.x = 0;
                     }
@@ -469,7 +462,7 @@
                     draw();
                     requestAnimationFrame(loop);
                 }
-                
+
                 bgImg.onload = () => {
                     ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
                 };

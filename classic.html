@@ -28,7 +28,6 @@
             touch-action: none;
         }
 
-        /* --- OVERLAY PARA INICIAR --- */
         #start-overlay {
             position: fixed;
             inset: 0;
@@ -217,10 +216,10 @@
 
         .controles-touch {
             display: none;
-            justify-content: space-between;
-            width: 95%;
-            max-width: 650px;
-            padding: 20px 0;
+            position: relative;
+            width: 100%;
+            height: 200px;
+            z-index: 1001;
         }
 
         .controles-touch button {
@@ -233,30 +232,40 @@
             font-family: 'Bangers';
             font-size: 16px;
             cursor: pointer;
-        }
-
-        .btn-action {
-            background: var(--vermelho-aranha) !important;
-        }
-
-        #controls-info {
-            margin-top: 15px;
-            font-size: 20px;
-            color: #777;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             display: flex;
-            gap: 15px;
-            opacity: 0.8;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            position: absolute;
         }
 
-        #controls-info span {
-            color: #444;
+        #btn-pular {
+            background: var(--vermelho-aranha) !important;
+            left: 25%;
+            transform: translateX(-50%);
+            bottom: 110px;
+        }
+
+        #btn-esquerda {
+            left: 5%;
+            bottom: 30px;
+        }
+
+        #btn-direita {
+            left: calc(5% + 80px);
+            bottom: 30px;
+        }
+
+        #btn-teia {
+            background: var(--vermelho-aranha) !important;
+            right: 5%;
+            bottom: 70px;
         }
 
         @media (max-width: 768px) {
             .controles-touch {
-                display: flex;
+                display: block;
             }
 
             #controls-info {
@@ -283,7 +292,7 @@
             <div class="game-container">
                 <div id="vitoria-msg-container">
                     <h2 id="vitoria-msg-text"></h2>
-                    <p style="font-size: 20px; margin-top: 10px;">REINICIANDO...</p>
+                    <p style="font-size: 20px; margin-top: 10px;">REINICIANDO EM 3s...</p>
                 </div>
 
                 <div id="gui">
@@ -306,14 +315,10 @@
             </div>
 
             <div class="controles-touch">
-                <div style="display: flex; gap: 10px;">
-                    <button id="btn-esquerda">◀</button>
-                    <button id="btn-direita">▶</button>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button id="btn-pular" class="btn-action">PULO</button>
-                    <button id="btn-teia" class="btn-action">TEIA</button>
-                </div>
+                <button id="btn-pular" class="btn-action">PULO</button>
+                <button id="btn-esquerda">◀</button>
+                <button id="btn-direita">▶</button>
+                <button id="btn-teia" class="btn-action">TEIA</button>
             </div>
 
             <div id="controls-info">
@@ -323,8 +328,28 @@
             <script>
                 const canvas = document.getElementById("gameCanvas");
                 const ctx = canvas.getContext("2d");
-                canvas.width = 600;
-                canvas.height = 350;
+
+                let gameScale = 1;
+
+                function resizeCanvas() {
+                    const container = document.querySelector('.game-container');
+                    canvas.width = container.clientWidth;
+                    canvas.height = container.clientHeight;
+
+                    // Ajusta o tamanho dos personagens e da tela de vitória
+                    if (window.innerWidth <= 768) {
+                        gameScale = 0.65;
+                    } else {
+                        gameScale = 1;
+                    }
+
+                    aranha.w = 75 * gameScale;
+                    aranha.h = 100 * gameScale;
+                    duende.w = 85 * gameScale;
+                    duende.h = 110 * gameScale;
+                }
+
+                window.addEventListener('resize', resizeCanvas);
 
                 const fundoImg = new Image(); fundoImg.src = 'assets/img-fundo1.png';
                 const aranhaImg = new Image(); aranhaImg.src = 'assets/spidey-game1.png';
@@ -339,57 +364,51 @@
                 const keys = { a: false, d: false };
 
                 const aranha = { x: 100, y: 200, w: 75, h: 100, vida: 100, vY: 0, pulando: false, dir: 1 };
-                const duende = { x: 600, y: 200, w: 85, h: 110, vida: 100, vY: 0 };
+                const duende = { x: 500, y: 200, w: 85, h: 110, vida: 100, vY: 0 };
+
+                resizeCanvas();
 
                 let teias = [], bombas = [];
 
                 function startGame() {
                     document.getElementById('start-overlay').style.display = 'none';
                     musicaFundo.play().catch(e => console.log("Erro áudio:", e));
-                    if (!jogoAtivo) {
-                        jogoAtivo = true;
-                        loop();
-                    }
+                    if (!jogoAtivo) { jogoAtivo = true; loop(); }
                 }
 
                 function resetJogo() {
                     aranha.vida = 100; duende.vida = 100;
-                    aranha.x = 100; duende.x = 600;
+                    aranha.x = 100; duende.x = canvas.width - (150 * gameScale);
                     teias = []; bombas = [];
                     document.getElementById('aranha-health').style.width = "100%";
                     document.getElementById('duende-health').style.width = "100%";
                     document.getElementById('vitoria-msg-container').style.display = 'none';
-
-                    if (!jogoAtivo) {
-                        jogoAtivo = true;
-                        loop();
-                    }
+                    if (!jogoAtivo) { jogoAtivo = true; loop(); }
                 }
 
                 function loop() {
                     if (!jogoAtivo) return;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
                     if (fundoImg.complete) ctx.drawImage(fundoImg, 0, 0, canvas.width, canvas.height);
 
                     [aranha, duende].forEach(p => {
                         p.y += p.vY;
-                        if (p.y + p.h < canvas.height - 30) { p.vY += 0.8; }
-                        else { p.vY = 0; p.y = canvas.height - 30 - p.h; p.pulando = false; }
+                        const groundY = canvas.height - 30;
+                        if (p.y + p.h < groundY) { p.vY += 0.8; }
+                        else { p.vY = 0; p.y = groundY - p.h; p.pulando = false; }
                     });
 
-                    if (keys.a) { aranha.x -= 7; aranha.dir = -1; }
-                    if (keys.d) { aranha.x += 7; aranha.dir = 1; }
+                    const moveSpeed = 7 * gameScale;
+                    if (keys.a) { aranha.x -= moveSpeed; aranha.dir = -1; }
+                    if (keys.d) { aranha.x += moveSpeed; aranha.dir = 1; }
                     aranha.x = Math.max(0, Math.min(canvas.width - aranha.w, aranha.x));
 
                     const dist = duende.x - aranha.x;
-                    if (dist > 300) duende.x -= 3;
-                    else if (dist < 150) duende.x += 3;
+                    if (dist > canvas.width / 2) duende.x -= moveSpeed * 0.4;
+                    else if (dist < 150 * gameScale) duende.x += moveSpeed * 0.4;
                     duende.x = Math.max(0, Math.min(canvas.width - duende.w, duende.x));
 
-                    if (Math.random() < 0.02) {
-                        bombas.push({ x: duende.x, y: duende.y + 30, vX: -7, vY: -3 });
-                    }
+                    if (Math.random() < 0.02) { bombas.push({ x: duende.x, y: duende.y + 30, vX: -7 * gameScale, vY: -3 * gameScale }); }
 
                     ctx.shadowBlur = 15;
                     ctx.shadowColor = "red";
@@ -401,18 +420,19 @@
                     teias.forEach((t, i) => {
                         t.x += t.vX;
                         ctx.fillStyle = "white";
-                        ctx.fillRect(t.x, t.y, 20, 5);
+                        ctx.fillRect(t.x, t.y, 20 * gameScale, 5 * gameScale);
                         if (t.x > duende.x && t.x < duende.x + duende.w && t.y > duende.y && t.y < duende.y + duende.h) {
                             duende.vida -= 5;
                             document.getElementById('duende-health').style.width = Math.max(0, duende.vida) + "%";
                             teias.splice(i, 1);
                         }
+                        if (t.x > canvas.width || t.x < 0) teias.splice(i, 1);
                     });
 
                     bombas.forEach((b, i) => {
                         b.x += b.vX; b.y += b.vY; b.vY += 0.15;
                         ctx.fillStyle = "orange";
-                        ctx.beginPath(); ctx.arc(b.x, b.y, 10, 0, Math.PI * 2); ctx.fill();
+                        ctx.beginPath(); ctx.arc(b.x, b.y, 8 * gameScale, 0, Math.PI * 2); ctx.fill();
                         if (b.x > aranha.x && b.x < aranha.x + aranha.w && b.y > aranha.y && b.y < aranha.y + aranha.h) {
                             aranha.vida -= 10;
                             document.getElementById('aranha-health').style.width = Math.max(0, aranha.vida) + "%";
@@ -425,7 +445,6 @@
                         jogoAtivo = false;
                         const vitoriaContainer = document.getElementById('vitoria-msg-container');
                         const vitoriaText = document.getElementById('vitoria-msg-text');
-
                         if (aranha.vida > 0) {
                             vitoriaText.innerText = "SPIDER-MAN WINS!";
                             vitoriaText.className = "spider-wins";
@@ -435,19 +454,17 @@
                             vitoriaText.className = "goblin-wins";
                             scoreDuende++;
                         }
-
                         document.getElementById('score-aranha').innerText = scoreAranha;
                         document.getElementById('score-duende').innerText = scoreDuende;
                         vitoriaContainer.style.display = 'flex';
-
                         setTimeout(resetJogo, 3000);
                         return;
                     }
                     requestAnimationFrame(loop);
                 }
 
-                function pular() { if (jogoAtivo && !aranha.pulando) { aranha.vY = -16; aranha.pulando = true; } }
-                function atirar() { if (jogoAtivo) teias.push({ x: aranha.x + (aranha.dir === 1 ? 50 : -10), y: aranha.y + 30, vX: aranha.dir * 14 }); }
+                function pular() { if (jogoAtivo && !aranha.pulando) { aranha.vY = -16 * gameScale; aranha.pulando = true; } }
+                function atirar() { if (jogoAtivo) teias.push({ x: aranha.x + (aranha.dir === 1 ? aranha.w : -10), y: aranha.y + 30, vX: aranha.dir * (14 * gameScale) }); }
 
                 window.addEventListener('keydown', e => {
                     if (!jogoAtivo) return;

@@ -12,11 +12,12 @@
         :root {
             --vermelho-aranha: #ff0000;
             --roxo-venom: #60399f;
+            --preto-escuro: #050505;
         }
 
         body {
             margin: 0;
-            background-color: #050505;
+            background-color: var(--preto-escuro);
             color: white;
             font-family: 'Bangers', cursive, system-ui;
             overflow: hidden;
@@ -28,11 +29,10 @@
             touch-action: none;
         }
 
-        /* OVERLAY PARA INICIAR ÁUDIO */
         #start-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 2000;
             display: flex;
             flex-direction: column;
@@ -42,7 +42,7 @@
         }
 
         #start-overlay h2 {
-            font-size: 50px;
+            font-size: clamp(40px, 10vw, 70px);
             color: var(--vermelho-aranha);
             text-shadow: 0 0 20px var(--vermelho-aranha);
             animation: pulse 1.5s infinite;
@@ -54,7 +54,7 @@
             }
 
             50% {
-                transform: scale(1.1);
+                transform: scale(1.05);
             }
 
             100% {
@@ -75,44 +75,35 @@
             font-size: 16px;
             text-transform: uppercase;
             text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
             transform: skew(-15deg);
-        }
-
-        .nav-button-game:hover {
-            background: var(--vermelho-aranha);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
         }
 
         .main-title {
             text-align: center;
             font-size: clamp(24px, 6vw, 45px);
             margin: 10px 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #fff;
             text-shadow: 3px 3px 0 var(--vermelho-aranha), -3px -3px 0 var(--roxo-venom);
         }
 
         #placar {
-            font-size: 18px;
+            font-size: 20px;
             letter-spacing: 2px;
             margin-bottom: 10px;
             background: rgba(255, 255, 255, 0.1);
-            padding: 5px 20px;
+            padding: 5px 25px;
             border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .game-container {
             position: relative;
-            border: 3px solid #333;
+            border: 4px solid #222;
             background-color: #000;
             width: 95vw;
             max-width: 800px;
             aspect-ratio: 16 / 9;
             overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
         }
 
         #gameCanvas {
@@ -158,8 +149,8 @@
 
         .health-container {
             width: clamp(80px, 20vw, 180px);
-            height: 16px;
-            background: rgba(0, 0, 0, 0.6);
+            height: 18px;
+            background: rgba(0, 0, 0, 0.7);
             border: 2px solid #fff;
             transform: skew(-15deg);
             overflow: hidden;
@@ -168,103 +159,87 @@
         .health-bar {
             height: 100%;
             width: 100%;
-            transition: width 0.3s ease;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #aranha-health {
-            background-color: var(--vermelho-aranha);
+            background: linear-gradient(90deg, #ff0000, #b30000);
         }
 
         #venom-health {
-            background-color: var(--roxo-venom);
+            background: linear-gradient(90deg, #4b2c7d, #60399f);
             float: right;
-        }
-
-        .vs-badge {
-            font-size: 24px;
-            margin: 0 15px;
-            color: #fff;
-            text-shadow: 0 0 10px #fff;
-        }
-
-        #vitoria-msg-container {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-
-        #vitoria-msg-text {
-            font-size: clamp(40px, 10vw, 80px);
-            margin: 0;
-            text-align: center;
-        }
-
-        .spider-wins {
-            color: var(--vermelho-aranha);
-            text-shadow: 0 0 30px var(--vermelho-aranha);
-        }
-
-        .venom-wins {
-            color: var(--roxo-venom);
-            text-shadow: 0 0 30px var(--roxo-venom);
         }
 
         .controles-touch {
             display: none;
-            justify-content: space-between;
+            position: relative;
             width: 95%;
-            max-width: 650px;
-            padding: 20px 0;
+            max-width: 700px;
+            height: 180px;
+            margin-top: 10px;
+            z-index: 1500;
         }
 
         .controles-touch button {
-            width: 70px;
-            height: 70px;
+            position: absolute;
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
             border: 3px solid #fff;
-            background: #222;
+            background: rgba(40, 40, 40, 0.9);
             color: white;
             font-family: 'Bangers';
-            font-size: 16px;
-            cursor: pointer;
+            font-size: 18px;
+            user-select: none;
+            box-shadow: 0 5px 0 #000;
         }
 
-        .btn-action {
+        .controles-touch button:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        #btn-esquerda {
+            left: 10px;
+            bottom: 10px;
+        }
+
+        #btn-direita {
+            left: 100px;
+            bottom: 10px;
+        }
+
+        #btn-pular {
+            left: 55px;
+            bottom: 95px;
             background: var(--roxo-venom) !important;
+            border-color: #fff !important;
+        }
+
+        #btn-teia {
+            right: 10px;
+            bottom: 40px;
+            width: 75px;
+            height: 75px;
+            background: var(--roxo-venom) !important;
+            border-color: #fff !important;
         }
 
         #controls-info {
-            margin-top: 15px;
-            font-size: 20px;
-            color: #777;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #555;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            gap: 15px;
-            opacity: 0.8;
-        }
-
-        #controls-info span {
-            color: #444;
         }
 
         @media (max-width: 768px) {
             .controles-touch {
-                display: flex;
+                display: block;
             }
 
             #controls-info {
                 display: none;
-            }
-
-            .main-title {
-                font-size: 20px;
-                padding: 0 60px;
             }
         }
     </style>
@@ -273,6 +248,7 @@
 <body>
     <div id="start-overlay" onclick="startGame()">
         <h2>CLICK TO FIGHT!</h2>
+        <p style="color: #fff; margin-top: 10px;">PREPARE-SE PARA O SIMBIONTE</p>
     </div>
 
     <a href="index.html" class="nav-button-game">
@@ -285,9 +261,10 @@
             </div>
 
             <div class="game-container">
-                <div id="vitoria-msg-container">
-                    <h2 id="vitoria-msg-text"></h2>
-                    <p style="font-size: 20px; margin-top: 10px;">REINICIANDO COMBATE...</p>
+                <div id="vitoria-msg-container"
+                    style="position: absolute; inset: 0; background: rgba(0,0,0,0.9); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 100;">
+                    <h2 id="vitoria-msg-text" style="font-size: clamp(40px, 10vw, 80px);"></h2>
+                    <p style="font-size: 20px; margin-top: 10px; color: #aaa;">REINICIANDO EM 3s...</p>
                 </div>
 
                 <div id="gui">
@@ -297,7 +274,9 @@
                             <div id="aranha-health" class="health-bar"></div>
                         </div>
                     </div>
-                    <div class="vs-badge">VS</div>
+                    <div class="vs-badge"
+                        style="font-size: 24px; margin: 0 15px; font-style: italic; color: #ff0000; text-shadow: 1px 1px #fff;">
+                        VS</div>
                     <div class="player-wrapper">
                         <div class="health-container">
                             <div id="venom-health" class="health-bar"></div>
@@ -310,49 +289,56 @@
             </div>
 
             <div class="controles-touch">
-                <div style="display: flex; gap: 10px;">
-                    <button id="btn-esquerda">◀</button>
-                    <button id="btn-direita">▶</button>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button id="btn-pular" class="btn-action">PULO</button>
-                    <button id="btn-teia" class="btn-action">TEIA</button>
-                </div>
+                <button id="btn-pular">PULO</button>
+                <button id="btn-esquerda">◀</button>
+                <button id="btn-direita">▶</button>
+                <button id="btn-teia">TEIA</button>
             </div>
 
             <div id="controls-info">
-                [A-D] ANDAR <span>|</span> [W] PULAR <span>|</span> [F] ATIRAR TEIA
+                [A-D] MOVER | [W] PULAR | [F] TEIA
             </div>
 
             <script>
                 const canvas = document.getElementById("gameCanvas");
                 const ctx = canvas.getContext("2d");
-                canvas.width = 600;
-                canvas.height = 350;
+                canvas.width = 800;
+                canvas.height = 450;
 
-                const fundoImg = new Image(); fundoImg.src = 'assets/img-fundo2.png';
-                const aranhaImg = new Image(); aranhaImg.src = 'assets/spidey-game2.png';
-                const venomImg = new Image(); venomImg.src = 'assets/venom-game.png';
+                const assets = {
+                    fundo: new Image(),
+                    aranha: new Image(),
+                    venom: new Image()
+                };
 
-                const musicaFundo = new Audio('assets/venom-theme.mp3');
-                musicaFundo.loop = true;
-                musicaFundo.volume = 0.5;
+                assets.fundo.src = 'assets/img-fundo2.png';
+                assets.aranha.src = 'assets/spidey-game2.png';
+                assets.venom.src = 'assets/venom-game.png';
+
+                const musica = new Audio('assets/venom-theme.mp3');
+                musica.loop = true;
 
                 let jogoAtivo = false;
                 let scoreAranha = 0, scoreVenom = 0;
                 const keys = { a: false, d: false };
 
-                const aranha = { x: 100, y: 200, w: 75, h: 100, vida: 100, vY: 0, pulando: false, dir: 1 };
-                const venom = { x: 600, y: 200, w: 90, h: 115, vida: 100, vY: 0 };
+                const aranha = {
+                    x: 100, y: 300, w: 80, h: 110,
+                    vida: 100, vY: 0, pulando: false, dir: 1
+                };
+                const venom = {
+                    x: 600, y: 280, w: 110, h: 130,
+                    vida: 100, vY: 0, dir: -1
+                };
 
                 let teias = [], ataquesVenom = [];
 
                 function startGame() {
                     document.getElementById('start-overlay').style.display = 'none';
-                    musicaFundo.play().catch(e => console.log("Erro audio:", e));
+                    musica.play().catch(() => { });
                     if (!jogoAtivo) {
                         jogoAtivo = true;
-                        loop();
+                        requestAnimationFrame(loop);
                     }
                 }
 
@@ -363,51 +349,58 @@
                     document.getElementById('aranha-health').style.width = "100%";
                     document.getElementById('venom-health').style.width = "100%";
                     document.getElementById('vitoria-msg-container').style.display = 'none';
-
-                    if (!jogoAtivo) {
-                        jogoAtivo = true;
-                        loop();
-                    }
+                    jogoAtivo = true;
+                    requestAnimationFrame(loop);
                 }
 
                 function loop() {
                     if (!jogoAtivo) return;
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                    if (fundoImg.complete) ctx.drawImage(fundoImg, 0, 0, canvas.width, canvas.height);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    if (assets.fundo.complete) ctx.drawImage(assets.fundo, 0, 0, canvas.width, canvas.height);
 
                     [aranha, venom].forEach(p => {
                         p.y += p.vY;
-                        if (p.y + p.h < canvas.height - 30) { p.vY += 0.8; }
-                        else { p.vY = 0; p.y = canvas.height - 30 - p.h; p.pulando = false; }
+                        if (p.y + p.h < canvas.height - 40) {
+                            p.vY += 0.8;
+                        } else {
+                            p.vY = 0;
+                            p.y = canvas.height - 40 - p.h;
+                            p.pulando = false;
+                        }
                     });
 
-                    if (keys.a) { aranha.x -= 7; aranha.dir = -1; }
-                    if (keys.d) { aranha.x += 7; aranha.dir = 1; }
+                    if (keys.a) { aranha.x -= 8; aranha.dir = -1; }
+                    if (keys.d) { aranha.x += 8; aranha.dir = 1; }
                     aranha.x = Math.max(0, Math.min(canvas.width - aranha.w, aranha.x));
 
-                    const dist = venom.x - aranha.x;
-                    if (dist > 150) venom.x -= 3.5;
-                    else if (dist < 100) venom.x += 3.5;
-                    venom.x = Math.max(0, Math.min(canvas.width - venom.w, venom.x));
+                    const centroAranha = aranha.x + aranha.w / 2;
+                    const centroVenom = venom.x + venom.w / 2;
 
-                    if (Math.random() < 0.02) {
-                        ataquesVenom.push({ x: venom.x, y: venom.y + 30, vX: venom.x > aranha.x ? -7 : 7, vY: 0 });
+                    if (centroVenom > centroAranha + 150) venom.x -= 3;
+                    else if (centroVenom < centroAranha - 150) venom.x += 3;
+
+                    if (Math.random() < 0.025) {
+                        ataquesVenom.push({
+                            x: venom.x + (centroVenom > centroAranha ? 0 : venom.w),
+                            y: venom.y + 40,
+                            vX: centroVenom > centroAranha ? -9 : 9
+                        });
                     }
 
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = "red";
-                    if (aranhaImg.complete) ctx.drawImage(aranhaImg, aranha.x, aranha.y, aranha.w, aranha.h);
-                    ctx.shadowColor = "#60399f";
-                    if (venomImg.complete) ctx.drawImage(venomImg, venom.x, venom.y, venom.w, venom.h);
-                    ctx.shadowBlur = 0;
+                    if (assets.aranha.complete) ctx.drawImage(assets.aranha, aranha.x, aranha.y, aranha.w, aranha.h);
+                    if (assets.venom.complete) ctx.drawImage(assets.venom, venom.x, venom.y, venom.w, venom.h);
 
                     teias.forEach((t, i) => {
                         t.x += t.vX;
-                        ctx.fillStyle = "cyan";
-                        ctx.fillRect(t.x, t.y, 20, 5);
+                        ctx.fillStyle = "#fff";
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = "cyan";
+                        ctx.fillRect(t.x, t.y, 25, 6);
+                        ctx.shadowBlur = 0;
+
                         if (t.x > venom.x && t.x < venom.x + venom.w && t.y > venom.y && t.y < venom.y + venom.h) {
-                            venom.vida -= 5;
+                            venom.vida -= 4;
                             document.getElementById('venom-health').style.width = Math.max(0, venom.vida) + "%";
                             teias.splice(i, 1);
                         }
@@ -415,48 +408,49 @@
 
                     ataquesVenom.forEach((b, i) => {
                         b.x += b.vX;
-                        ctx.fillStyle = "black";
-                        ctx.beginPath(); ctx.arc(b.x, b.y, 12, 0, Math.PI * 2); ctx.fill();
-                        ctx.strokeStyle = "#60399f"; ctx.lineWidth = 2; ctx.stroke();
+                        ctx.fillStyle = "#1a1a1a";
+                        ctx.beginPath();
+                        ctx.arc(b.x, b.y, 14, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.strokeStyle = "#60399f";
+                        ctx.stroke();
 
                         if (b.x > aranha.x && b.x < aranha.x + aranha.w && b.y > aranha.y && b.y < aranha.y + aranha.h) {
-                            aranha.vida -= 10;
+                            aranha.vida -= 8;
                             document.getElementById('aranha-health').style.width = Math.max(0, aranha.vida) + "%";
                             ataquesVenom.splice(i, 1);
                         }
-                        if (b.x < 0 || b.x > canvas.width) ataquesVenom.splice(i, 1);
                     });
 
                     if (aranha.vida <= 0 || venom.vida <= 0) {
                         jogoAtivo = false;
-                        const vitoriaContainer = document.getElementById('vitoria-msg-container');
-                        const vitoriaText = document.getElementById('vitoria-msg-text');
+                        const vContainer = document.getElementById('vitoria-msg-container');
+                        const vText = document.getElementById('vitoria-msg-text');
 
                         if (aranha.vida > 0) {
-                            vitoriaText.innerText = "SPIDER-MAN WINS!";
-                            vitoriaText.className = "spider-wins";
+                            vText.innerText = "SPIDER-MAN WINS!";
+                            vText.style.color = "var(--vermelho-aranha)";
                             scoreAranha++;
                         } else {
-                            vitoriaText.innerText = "VENOM WINS!";
-                            vitoriaText.className = "venom-wins";
+                            vText.innerText = "VENOM WINS!";
+                            vText.style.color = "var(--roxo-venom)";
                             scoreVenom++;
                         }
 
                         document.getElementById('score-aranha').innerText = scoreAranha;
                         document.getElementById('score-venom').innerText = scoreVenom;
-                        vitoriaContainer.style.display = 'flex';
-
+                        vContainer.style.display = 'flex';
                         setTimeout(resetJogo, 3000);
                         return;
                     }
+
                     requestAnimationFrame(loop);
                 }
 
-                function pular() { if (jogoAtivo && !aranha.pulando) { aranha.vY = -16; aranha.pulando = true; } }
-                function atirar() { if (jogoAtivo) teias.push({ x: aranha.x + (aranha.dir === 1 ? 50 : -10), y: aranha.y + 30, vX: aranha.dir * 14 }); }
+                function pular() { if (jogoAtivo && !aranha.pulando) { aranha.vY = -18; aranha.pulando = true; } }
+                function atirar() { if (jogoAtivo) teias.push({ x: aranha.x + (aranha.dir === 1 ? aranha.w : -20), y: aranha.y + 45, vX: aranha.dir * 15 }); }
 
                 window.addEventListener('keydown', e => {
-                    if (!jogoAtivo) return;
                     const k = e.key.toLowerCase();
                     if (k === 'a') keys.a = true; if (k === 'd') keys.d = true;
                     if (k === 'w') pular(); if (k === 'f') atirar();
@@ -467,17 +461,16 @@
                     if (k === 'a') keys.a = false; if (k === 'd') keys.d = false;
                 });
 
-                const bindBtn = (id, start, end) => {
+                const setupBtn = (id, start, end) => {
                     const el = document.getElementById(id);
-                    el.addEventListener('touchstart', (e) => { e.preventDefault(); if (jogoAtivo) start(); });
-                    if (end) el.addEventListener('touchend', (e) => { e.preventDefault(); end(); });
-                    el.addEventListener('mousedown', (e) => { if (jogoAtivo) start(); });
-                    if (end) el.addEventListener('mouseup', (e) => { end(); });
+                    el.addEventListener('touchstart', (e) => { e.preventDefault(); start(); }, { passive: false });
+                    if (end) el.addEventListener('touchend', (e) => { e.preventDefault(); end(); }, { passive: false });
                 };
-                bindBtn('btn-esquerda', () => keys.a = true, () => keys.a = false);
-                bindBtn('btn-direita', () => keys.d = true, () => keys.d = false);
-                bindBtn('btn-pular', pular);
-                bindBtn('btn-teia', atirar);
+
+                setupBtn('btn-esquerda', () => keys.a = true, () => keys.a = false);
+                setupBtn('btn-direita', () => keys.d = true, () => keys.d = false);
+                setupBtn('btn-pular', pular);
+                setupBtn('btn-teia', atirar);
             </script>
 </body>
 

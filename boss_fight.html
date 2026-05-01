@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Spider-Man vs Green Goblin - Minimal Pro</title>
+    <title>Spider-Man vs Green Goblin</title>
     <link rel="icon" type="image/jpeg" href="assets/favicon.jpeg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
@@ -39,7 +39,8 @@
         #start-overlay h2 {
             font-size: clamp(40px, 10vw, 70px);
             color: #ff0000;
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+            -webkit-filter: drop-shadow(0 0 10px red);
             animation: pulse 1.5s infinite;
             margin: 0;
         }
@@ -98,6 +99,7 @@
             max-width: 850px;
             aspect-ratio: 16 / 10;
             overflow: hidden;
+            z-index: 1;
         }
 
         canvas {
@@ -105,6 +107,7 @@
             height: 100%;
             display: block;
             cursor: crosshair;
+            image-rendering: pixelated;
         }
 
         #hud {
@@ -114,7 +117,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 100;
             pointer-events: none;
         }
 
@@ -160,18 +163,21 @@
         #player-hp {
             background: #ff0000;
             width: 100%;
+            box-shadow: 0 0 10px #ff0000;
         }
 
         #boss-hp {
             background: #00ff00;
             width: 100%;
             float: right;
+            box-shadow: 0 0 10px #00ff00;
         }
 
         #vs-tag {
             font-size: clamp(20px, 5vw, 32px);
             margin: 0 15px;
             text-shadow: 2px 2px #000;
+            color: #fff;
         }
 
         #mobile-controls {
@@ -230,7 +236,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .victory-title {
@@ -274,6 +280,11 @@
 
             #controls-info {
                 display: none;
+            }
+
+            #game-wrapper {
+                border-color: #ff0000;
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
             }
         }
     </style>
@@ -325,7 +336,7 @@
             </div>
 
             <div id="controls-info">
-                [W][A][S][D] Move | [F] Atacar
+                [W] [A] [S] [D] Move | [F] Atacar
             </div>
 
             <audio id="bgMusic" loop>
@@ -350,22 +361,19 @@
                 const player = { x: 100, y: 350, radius: 25, hp: 100, speed: 7 };
                 const boss = { x: 600, y: 200, size: 40, hp: 100, angle: 0 };
 
-                // FUNÇÃO PARA INICIAR
                 function startGame() {
                     document.getElementById('start-overlay').style.display = 'none';
                     bgMusic.play().catch(e => console.log("Erro ao tocar música:", e));
                     gameRunning = true;
-                    loop(); 
+                    loop();
                 }
 
-                // Teclado
                 window.addEventListener('keydown', e => {
                     keys[e.code] = true;
                     if (e.code === 'KeyF' && gameRunning) shootWeb();
                 });
                 window.addEventListener('keyup', e => keys[e.code] = false);
 
-                // Touch Controls
                 const setupTouch = (id, key) => {
                     const el = document.getElementById(id);
                     el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; });
@@ -439,15 +447,14 @@
                 }
 
                 function draw() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(imgBG, 0, 0, canvas.width, canvas.height);
 
-                    // Player
                     ctx.shadowBlur = 15; ctx.shadowColor = "red";
                     ctx.fillStyle = "#ff0000";
                     ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2); ctx.fill();
                     ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke();
 
-                    // Boss
                     ctx.shadowColor = "#0f0";
                     ctx.fillStyle = "#2e8b57";
                     ctx.beginPath();
@@ -457,7 +464,6 @@
                     ctx.closePath(); ctx.fill();
                     ctx.strokeStyle = "yellow"; ctx.stroke();
 
-                    // Web / Attacks
                     ctx.shadowBlur = 0;
                     ctx.fillStyle = "#fff";
                     webs.forEach(w => ctx.fillRect(w.x, w.y - 3, 22, 6));
@@ -475,9 +481,7 @@
                     requestAnimationFrame(loop);
                 }
 
-                // Carrega o fundo primeiro, mas não inicia o loop automático
                 imgBG.onload = () => {
-                    // Desenha apenas o fundo inicial parado
                     ctx.drawImage(imgBG, 0, 0, canvas.width, canvas.height);
                 };
             </script>

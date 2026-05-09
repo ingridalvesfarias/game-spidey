@@ -27,6 +27,9 @@
             justify-content: center;
             height: 100vh;
             touch-action: none;
+            /* ESSENCIAL: Impede seleção de texto no corpo todo */
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         #start-overlay {
@@ -49,7 +52,6 @@
         }
 
         @keyframes pulse {
-
             0% {
                 transform: scale(1);
             }
@@ -61,7 +63,6 @@
             100% {
                 transform: scale(1);
             }
-
         }
 
         .nav-button-game {
@@ -194,11 +195,15 @@
             color: white;
             font-family: 'Bangers';
             font-size: 18px;
-            user-select: none;
             box-shadow: 0 5px 0 #000;
+
+            /* ESSENCIAL: Impede o menu de "Salvar imagem" no toque longo */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Botões de Movimento (Esquerda e Direita) */
         #btn-esquerda,
         #btn-direita {
             background-size: contain;
@@ -248,7 +253,7 @@
         #btn-esquerda:active,
         #btn-direita:active {
             transform: scale(0.95);
-            filter: drop-shadow(0 0 15px #00ffff);
+            filter: drop-shadow(0 0 15px #ffffff);
         }
 
         #controls-info {
@@ -277,7 +282,6 @@
             justify-content: center;
             align-items: center;
             z-index: 100;
-
         }
 
         .spider-wins {
@@ -292,7 +296,7 @@
     </style>
 </head>
 
-<body>
+<body oncontextmenu="return false;">
     <div id="start-overlay" onclick="startGame()">
         <h2>READY TO FIGHT?</h2>
         <p style="color: #fff; margin-top: 10px;">PREPARE-SE PARA O DUENDE VERDE</p>
@@ -304,9 +308,7 @@
             <h1 class="main-title">SPIDER-MAN VS GREEN GOBLIN</h1>
 
             <div id="placar">
-
                 SPIDER: <span id="score-aranha">0</span> | GOBLIN: <span id="score-duende">0</span>
-
             </div>
 
             <div class="game-container">
@@ -334,40 +336,33 @@
                 </div>
 
                 <canvas id="gameCanvas"></canvas>
-
             </div>
 
             <div class="controles-touch">
                 <button id="btn-pular">PULO</button>
-                <button id="btn-esquerda"></button>
-                <button id="btn-direita"></button>
+                <button id="btn-esquerda" draggable="false"></button>
+                <button id="btn-direita" draggable="false"></button>
                 <button id="btn-teia">TEIA</button>
             </div>
 
             <div id="controls-info">
-
                 [A-D] ANDAR | [W] PULAR | [F] ATIRAR TEIA
-
             </div>
 
             <script>
-
                 const canvas = document.getElementById("gameCanvas");
                 const ctx = canvas.getContext("2d");
 
                 let gameScale = 1;
 
                 function resizeCanvas() {
-
                     const container = document.querySelector('.game-container');
                     canvas.width = container.clientWidth;
                     canvas.height = container.clientHeight;
 
                     if (window.innerWidth <= 768) {
                         gameScale = 0.65;
-
                     } else {
-
                         gameScale = 1;
                     }
 
@@ -382,7 +377,6 @@
                 const fundoImg = new Image(); fundoImg.src = 'assets/img-fundo1.png';
                 const aranhaImg = new Image(); aranhaImg.src = 'assets/spidey-game1.png';
                 const duendeImg = new Image(); duendeImg.src = 'assets/green-goblin.png';
-
 
                 const musicaFundo = new Audio('assets/goblin-fight.mp3');
                 musicaFundo.loop = true;
@@ -407,12 +401,9 @@
                 }
 
                 function resetJogo() {
-
                     aranha.vida = 100; duende.vida = 100;
                     aranha.x = 100; duende.x = canvas.width - (150 * gameScale);
-
                     teias = []; bombas = [];
-
                     document.getElementById('aranha-health').style.width = "100%";
                     document.getElementById('duende-health').style.width = "100%";
                     document.getElementById('vitoria-msg-container').style.display = 'none';
@@ -420,7 +411,6 @@
                 }
 
                 function loop() {
-
                     if (!jogoAtivo) return;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     if (fundoImg.complete) ctx.drawImage(fundoImg, 0, 0, canvas.width, canvas.height);
@@ -449,64 +439,51 @@
                     if (aranhaImg.complete) ctx.drawImage(aranhaImg, aranha.x, aranha.y, aranha.w, aranha.h);
                     ctx.shadowColor = "#39FF14";
                     if (duendeImg.complete) ctx.drawImage(duendeImg, duende.x, duende.y, duende.w, duende.h);
-
                     ctx.shadowBlur = 0;
 
                     teias.forEach((t, i) => {
-
                         t.x += t.vX;
                         ctx.fillStyle = "white";
                         ctx.fillRect(t.x, t.y, 20 * gameScale, 5 * gameScale);
-
                         if (t.x > duende.x && t.x < duende.x + duende.w && t.y > duende.y && t.y < duende.y + duende.h) {
                             duende.vida -= 5;
                             document.getElementById('duende-health').style.width = Math.max(0, duende.vida) + "%";
                             teias.splice(i, 1);
-
                         }
-
                         if (t.x > canvas.width || t.x < 0) teias.splice(i, 1);
                     });
 
                     bombas.forEach((b, i) => {
-
                         b.x += b.vX; b.y += b.vY; b.vY += 0.15;
                         ctx.fillStyle = "orange";
                         ctx.beginPath(); ctx.arc(b.x, b.y, 8 * gameScale, 0, Math.PI * 2); ctx.fill();
-
                         if (b.x > aranha.x && b.x < aranha.x + aranha.w && b.y > aranha.y && b.y < aranha.y + aranha.h) {
                             aranha.vida -= 10;
                             document.getElementById('aranha-health').style.width = Math.max(0, aranha.vida) + "%";
                             bombas.splice(i, 1);
                         }
-
                         if (b.y > canvas.height) bombas.splice(i, 1);
                     });
 
                     if (aranha.vida <= 0 || duende.vida <= 0) {
-
                         jogoAtivo = false;
                         const vitoriaContainer = document.getElementById('vitoria-msg-container');
                         const vitoriaText = document.getElementById('vitoria-msg-text');
-
                         if (aranha.vida > 0) {
                             vitoriaText.innerText = "SPIDER-MAN WINS!";
                             vitoriaText.className = "spider-wins";
                             scoreAranha++;
-
                         } else {
                             vitoriaText.innerText = "GOBLIN WINS!";
                             vitoriaText.className = "goblin-wins";
                             scoreDuende++;
                         }
-
                         document.getElementById('score-aranha').innerText = scoreAranha;
                         document.getElementById('score-duende').innerText = scoreDuende;
                         vitoriaContainer.style.display = 'flex';
                         setTimeout(resetJogo, 3000);
                         return;
                     }
-
                     requestAnimationFrame(loop);
                 }
 

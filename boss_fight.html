@@ -356,6 +356,7 @@
                 let joyActive = false;
                 let joyX = 0; // -1 a 1
                 let joyY = 0; // -1 a 1
+                let joystickTouchId = null; // ID único para o dedo do joystick
 
                 const imgBG = new Image(); imgBG.src = 'assets/img-fundo4.png';
                 const player = { x: 100, y: 350, radius: 25, hp: 100, speed: 7 };
@@ -368,20 +369,42 @@
                     loop();
                 }
 
-                // --- LÓGICA DO JOYSTICK ---
+                // --- LÓGICA DO JOYSTICK (COM MULTI-TOUCH) ---
                 const joyContainer = document.getElementById('joystick-container');
                 const joyStick = document.getElementById('joystick-stick');
 
-                joyContainer.addEventListener('touchstart', (e) => { joyActive = true; handleJoy(e); });
-                window.addEventListener('touchmove', (e) => { if (joyActive) handleJoy(e); }, { passive: false });
-                window.addEventListener('touchend', () => {
-                    joyActive = false; joyX = 0; joyY = 0;
-                    joyStick.style.transform = `translate(-50%, -50%)`;
+                joyContainer.addEventListener('touchstart', (e) => {
+                    const touch = e.changedTouches[0];
+                    joystickTouchId = touch.identifier;
+                    joyActive = true;
+                    handleJoy(e, touch);
+                }, { passive: false });
+
+                window.addEventListener('touchmove', (e) => {
+                    if (joyActive) {
+                        for (let i = 0; i < e.touches.length; i++) {
+                            if (e.touches[i].identifier === joystickTouchId) {
+                                handleJoy(e, e.touches[i]);
+                                break;
+                            }
+                        }
+                    }
+                }, { passive: false });
+
+                window.addEventListener('touchend', (e) => {
+                    for (let i = 0; i < e.changedTouches.length; i++) {
+                        if (e.changedTouches[i].identifier === joystickTouchId) {
+                            joyActive = false;
+                            joystickTouchId = null;
+                            joyX = 0; joyY = 0;
+                            joyStick.style.transform = `translate(-50%, -50%)`;
+                            break;
+                        }
+                    }
                 });
 
-                function handleJoy(e) {
-                    e.preventDefault();
-                    const touch = e.touches[0];
+                function handleJoy(e, touch) {
+                    if (e.cancelable) e.preventDefault();
                     const rect = joyContainer.getBoundingClientRect();
                     const centerX = rect.left + rect.width / 2;
                     const centerY = rect.top + rect.height / 2;
@@ -408,10 +431,11 @@
                 });
                 window.addEventListener('keyup', e => keys[e.code] = false);
 
+                // Botão de Ataque Mobile (Multi-touch)
                 document.getElementById('m-attack').addEventListener('touchstart', (e) => {
-                    e.preventDefault();
+                    if (e.cancelable) e.preventDefault();
                     if (gameRunning) shootWeb();
-                });
+                }, { passive: false });
 
                 function shootWeb() {
                     webs.push({ x: player.x + player.radius, y: player.y, s: 15 });
@@ -430,7 +454,6 @@
                     if (!gameRunning) return;
                     frame++;
 
-                    // Movimento Teclado ou Joystick
                     let moveX = 0;
                     let moveY = 0;
 
@@ -439,7 +462,6 @@
                     if (keys['KeyA']) moveX = -1;
                     if (keys['KeyD']) moveX = 1;
 
-                    // Se joystick estiver sendo usado, ele sobrepõe o teclado
                     if (joyActive) {
                         moveX = joyX;
                         moveY = joyY;
@@ -448,7 +470,6 @@
                     player.x += moveX * player.speed;
                     player.y += moveY * player.speed;
 
-                    // Limites da tela
                     if (player.y < 80) player.y = 80;
                     if (player.y > canvas.height - 40) player.y = canvas.height - 40;
                     if (player.x < 40) player.x = 40;

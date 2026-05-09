@@ -23,7 +23,6 @@
             touch-action: none;
         }
 
-        /* --- START OVERLAY --- */
         #start-overlay {
             position: fixed;
             inset: 0;
@@ -42,12 +41,6 @@
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
             animation: pulse 1.5s infinite;
             margin: 0;
-        }
-
-        #start-overlay p {
-            font-size: 20px;
-            color: #888;
-            margin-top: 10px;
         }
 
         @keyframes pulse {
@@ -79,14 +72,7 @@
             text-transform: uppercase;
             text-decoration: none;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
             transform: skew(-15deg);
-        }
-
-        .nav-button-game:hover {
-            background: #ff0000;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
         }
 
         #game-wrapper {
@@ -125,8 +111,8 @@
             width: clamp(35px, 10vw, 55px);
             height: clamp(35px, 10vw, 55px);
             border-radius: 50%;
-            background-size: cover;
             border: 2px solid #fff;
+            background-size: cover;
         }
 
         .player-icon {
@@ -299,7 +285,6 @@
             <script>
                 const canvas = document.getElementById('gameCanvas');
                 const ctx = canvas.getContext('2d');
-
                 canvas.width = 800;
                 canvas.height = 300;
 
@@ -328,7 +313,7 @@
 
                 function startGame() {
                     document.getElementById('start-overlay').style.display = 'none';
-                    bgMusic.play().catch(e => console.log("Aguardando interação..."));
+                    bgMusic.play().catch(e => console.log("Som ativado"));
                     gameActive = true;
                     loop();
                 }
@@ -365,9 +350,7 @@
                     if (e.code === 'KeyR' && !gameActive) location.reload();
                 });
 
-                window.addEventListener('keyup', e => {
-                    if (e.code === 'Space') player.isSwinging = false;
-                });
+                window.addEventListener('keyup', e => { if (e.code === 'Space') player.isSwinging = false; });
 
                 document.getElementById('m-swing').addEventListener('touchstart', e => { e.preventDefault(); startSwing(); });
                 document.getElementById('m-swing').addEventListener('touchend', e => { e.preventDefault(); player.isSwinging = false; });
@@ -382,20 +365,35 @@
                         player.angleV -= gEff / 40;
                         player.angle += player.angleV;
                         player.angleV *= 0.992;
-                        player.x = player.anchorX + Math.sin(player.angle) * player.ropeLen;
-                        player.y = player.anchorY + Math.cos(player.angle) * player.ropeLen;
-                        player.vx = player.angleV * player.ropeLen;
-                        player.vy = 0;
+
+                        let nextX = player.anchorX + Math.sin(player.angle) * player.ropeLen;
+                        let nextY = player.anchorY + Math.cos(player.angle) * player.ropeLen;
+
+                        // --- NOVA LÓGICA DE IMPACTO NAS PAREDES ---
+                        if (nextX < 0 || nextX > canvas.width - player.w) {
+                            player.isSwinging = false; // Solta a teia imediatamente
+                            player.vx = (nextX < 0) ? 7 : -7; // Empurra com força para o lado oposto
+                            player.vy = -3; // Leve pulo para cima
+                        } else {
+                            player.x = nextX;
+                            player.y = nextY;
+                            player.vx = player.angleV * player.ropeLen;
+                            player.vy = 0;
+                        }
                     } else {
                         player.vy += gravity;
                         player.vx *= friction;
-                        player.x += player.vx; player.y += player.vy;
+                        player.x += player.vx;
+                        player.y += player.vy;
 
-                        if (player.y > canvas.height - 110) { player.y = canvas.height - 110; player.vy = 0; }
-                        if (player.y < 0) { player.y = 0; player.vy = 0; }
-                        if (player.x < 0) player.x = 0;
+                        if (player.x < 0) { player.x = 0; player.vx = 0; }
+                        if (player.x > canvas.width - player.w) { player.x = canvas.width - player.w; player.vx = 0; }
                     }
 
+                    if (player.y > canvas.height - player.h) { player.y = canvas.height - player.h; player.vy = 0; }
+                    if (player.y < 0) { player.y = 0; player.vy = 0; }
+
+                    // Lógica do boss
                     boss.timer += 0.04;
                     boss.y = 100 + Math.sin(boss.timer) * 100;
                     boss.x = 700 + Math.cos(boss.timer * 0.5) * 180;
@@ -404,6 +402,7 @@
                         boss.bombs.push({ x: boss.x + 30, y: boss.y + 40, vx: -10, vy: 2, r: 8 });
                     }
 
+                    // Teias
                     player.projectiles.forEach((p, i) => {
                         p.x += p.vx; p.y += p.vy;
                         if (p.x > boss.x && p.x < boss.x + boss.w && p.y > boss.y && p.y < boss.y + boss.h) {
@@ -414,6 +413,7 @@
                         if (p.x > canvas.width) player.projectiles.splice(i, 1);
                     });
 
+                    // Bombas
                     boss.bombs.forEach((b, i) => {
                         b.x += b.vx; b.y += b.vy; b.vy += 0.15;
                         if (Math.hypot(b.x - (player.x + player.w / 2), b.y - (player.y + player.h / 2)) < 35) {
@@ -439,33 +439,26 @@
                     }
 
                     player.projectiles.forEach(p => {
-                        ctx.fillStyle = "white";
-                        ctx.shadowBlur = 10; ctx.shadowColor = "white";
-                        ctx.fillRect(p.x, p.y, 30, 6);
-                        ctx.shadowBlur = 0;
+                        ctx.fillStyle = "white"; ctx.shadowBlur = 10; ctx.shadowColor = "white";
+                        ctx.fillRect(p.x, p.y, 30, 6); ctx.shadowBlur = 0;
                     });
 
                     ctx.drawImage(spiderImg, player.x, player.y, player.w, player.h);
                     ctx.drawImage(goblinImg, boss.x, boss.y, boss.w, boss.h);
 
                     boss.bombs.forEach(b => {
-                        ctx.fillStyle = "#ffaa00";
-                        ctx.shadowBlur = 15; ctx.shadowColor = "orange";
-                        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
-                        ctx.shadowBlur = 0;
+                        ctx.fillStyle = "#ffaa00"; ctx.shadowBlur = 15; ctx.shadowColor = "orange";
+                        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
                     });
                 }
 
                 function loop() {
                     if (!gameActive) return;
-                    update();
-                    draw();
+                    update(); draw();
                     requestAnimationFrame(loop);
                 }
 
-                bgImg.onload = () => {
-                    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-                };
+                bgImg.onload = () => { ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height); };
             </script>
 </body>
 

@@ -230,8 +230,37 @@
             color: #666;
         }
 
-        /* AJUSTE PARA TABLET (VERTICAL E HORIZONTAL) */
-        @media (max-width: 1180px) {
+        /* --- AJUSTE EXCLUSIVO PARA TABLET --- */
+        @media (min-width: 768px) and (max-width: 1188px) {
+            #game-wrapper {
+                max-width: 1100px;
+                max-height: 75vh;
+                border-width: 4px;
+            }
+
+            #mobile-controls {
+                display: flex;
+                max-width: 800px;
+                gap: 40px;
+            }
+
+            .btn-attack {
+                width: 95px;
+                height: 95px;
+                font-size: 22px;
+            }
+
+            .bar-container {
+                width: 250px;
+            }
+
+            #controls-info {
+                display: none;
+            }
+        }
+
+        /* --- RESPONSIVO EXCLUSIVO PARA CELULAR --- */
+        @media (max-width: 767px) {
             #mobile-controls {
                 display: flex;
             }
@@ -240,7 +269,6 @@
                 display: none;
             }
 
-            /* Ajuste para não quebrar o layout se a tela for baixinha no modo horizontal */
             #game-wrapper {
                 max-height: 60vh;
             }

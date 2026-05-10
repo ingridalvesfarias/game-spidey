@@ -271,8 +271,9 @@
             color: #888;
         }
 
-        /* --- RESPONSIVIDADE TABLET (VERTICAL E HORIZONTAL) --- */
-        @media (max-width: 1180px) {
+        /* --- RESPONSIVIDADE TABLET --- */
+
+        @media (max-width: 1368px) {
             #mobile-controls {
                 display: flex;
             }
@@ -280,11 +281,38 @@
             #controls-info {
                 display: none;
             }
+        }
 
+        /* Ajustes específicos para Tablet (769px até 1188px) */
+        @media (min-width: 769px) and (max-width: 1188px) {
+            #game-wrapper {
+                max-width: 950px;
+                max-height: 70vh;
+                border-color: #ff0000;
+                box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+            }
+
+            #mobile-controls {
+                max-width: 900px;
+                height: 180px;
+            }
+
+            #joystick-container {
+                width: 140px;
+                height: 140px;
+            }
+
+            .btn-attack {
+                width: 100px;
+                height: 100px;
+                font-size: 26px;
+            }
+        }
+
+        @media (max-width: 768px) {
             #game-wrapper {
                 border-color: #ff0000;
                 box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-                /* Reduz altura do canvas no tablet para caber os botões */
                 max-height: 60vh;
             }
         }
@@ -355,10 +383,9 @@
                 const webs = [];
                 const bombs = [];
 
-                // Variáveis do Joystick
                 let joyActive = false;
-                let joyX = 0; // -1 a 1
-                let joyY = 0; // -1 a 1
+                let joyX = 0;
+                let joyY = 0;
                 let joystickTouchId = null;
 
                 const imgBG = new Image(); imgBG.src = 'assets/img-fundo4.png';
@@ -372,7 +399,6 @@
                     loop();
                 }
 
-                // Funções do Joystick
                 const joyContainer = document.getElementById('joystick-container');
                 const joyStick = document.getElementById('joystick-stick');
 

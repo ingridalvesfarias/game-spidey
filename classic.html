@@ -269,38 +269,40 @@
             }
         }
 
-        @media (min-width: 769px) and (max-width: 1180px) {
+        /* AJUSTE PARA TABLET */
+        @media (min-width: 769px) and (max-width: 1188px) {
             .game-container {
-                max-width: 90vw;
+                max-width: 80vw;
+                max-height: 55vh;
                 border-width: 6px;
             }
 
             .controles-touch {
                 display: block;
                 width: 95vw;
-                max-width: 1000px;
-                height: 220px;
-                margin-top: 20px;
+                max-width: 1100px;
+                height: 200px;
+                margin-top: 15px;
             }
 
             #btn-esquerda {
                 left: 20px;
-                bottom: 20px;
+                bottom: 10px;
                 width: 100px;
-                height: 200px;
+                height: 180px;
             }
 
             #btn-direita {
                 left: 140px;
-                bottom: 20px;
+                bottom: 10px;
                 width: 100px;
-                height: 200px;
+                height: 180px;
             }
 
             #btn-pular {
                 right: 140px;
                 left: auto;
-                bottom: 60px;
+                bottom: 50px;
                 width: 90px;
                 height: 90px;
                 font-size: 22px;
@@ -308,7 +310,7 @@
 
             #btn-teia {
                 right: 20px;
-                bottom: 60px;
+                bottom: 50px;
                 width: 90px;
                 height: 90px;
                 font-size: 22px;
@@ -403,7 +405,7 @@
                     canvas.width = container.clientWidth;
                     canvas.height = container.clientHeight;
                     if (window.innerWidth <= 768) { gameScale = 0.65; }
-                    else if (window.innerWidth <= 1180) { gameScale = 0.9; }
+                    else if (window.innerWidth <= 1368) { gameScale = 0.9; }
                     else { gameScale = 1; }
                     aranha.w = 75 * gameScale; aranha.h = 100 * gameScale;
                     duende.w = 85 * gameScale; duende.h = 110 * gameScale;
@@ -467,14 +469,12 @@
 
                     if (Math.random() < 0.02) { bombas.push({ x: duende.x, y: duende.y + 30, vX: -7 * gameScale, vY: -3 * gameScale }); }
 
-                    // Desenho Aranha com Flash
                     ctx.save();
                     if (aranha.isHit > 0) { ctx.filter = "brightness(3)"; aranha.isHit--; }
                     ctx.shadowBlur = 15; ctx.shadowColor = "red";
                     if (aranhaImg.complete) ctx.drawImage(aranhaImg, aranha.x, aranha.y, aranha.w, aranha.h);
                     ctx.restore();
 
-                    // Desenho Duende com Flash
                     ctx.save();
                     if (duende.isHit > 0) { ctx.filter = "brightness(2) sepia(1) hue-rotate(70deg) saturate(5)"; duende.isHit--; }
                     ctx.shadowBlur = 15; ctx.shadowColor = "#39FF14";

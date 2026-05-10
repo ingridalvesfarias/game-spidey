@@ -27,7 +27,6 @@
             justify-content: center;
             height: 100vh;
             touch-action: none;
-            /* ESSENCIAL: Impede seleção de texto no corpo todo */
             -webkit-user-select: none;
             user-select: none;
         }
@@ -174,7 +173,6 @@
             float: right;
         }
 
-        /* --- CONTROLES TOUCH --- */
         .controles-touch {
             display: none;
             position: relative;
@@ -196,8 +194,6 @@
             font-family: 'Bangers';
             font-size: 18px;
             box-shadow: 0 5px 0 #000;
-
-            /* ESSENCIAL: Impede o menu de "Salvar imagem" no toque longo */
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
@@ -237,7 +233,7 @@
         }
 
         #btn-teia {
-            right: 65px;
+            right: 50px;
             bottom: 40px;
             width: 75px;
             height: 75px;
@@ -266,6 +262,56 @@
         @media (max-width: 768px) {
             .controles-touch {
                 display: block;
+            }
+
+            #controls-info {
+                display: none;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1180px) {
+            .game-container {
+                max-width: 90vw;
+                border-width: 6px;
+            }
+
+            .controles-touch {
+                display: block;
+                width: 95vw;
+                max-width: 1000px;
+                height: 220px;
+                margin-top: 20px;
+            }
+
+            #btn-esquerda {
+                left: 20px;
+                bottom: 20px;
+                width: 100px;
+                height: 200px;
+            }
+
+            #btn-direita {
+                left: 140px;
+                bottom: 20px;
+                width: 100px;
+                height: 200px;
+            }
+
+            #btn-pular {
+                right: 140px;
+                left: auto;
+                bottom: 60px;
+                width: 90px;
+                height: 90px;
+                font-size: 22px;
+            }
+
+            #btn-teia {
+                right: 20px;
+                bottom: 60px;
+                width: 90px;
+                height: 90px;
+                font-size: 22px;
             }
 
             #controls-info {
@@ -345,31 +391,22 @@
                 <button id="btn-teia">TEIA</button>
             </div>
 
-            <div id="controls-info">
-                [A-D] ANDAR | [W] PULAR | [F] ATIRAR TEIA
-            </div>
+            <div id="controls-info"> [A-D] ANDAR | [W] PULAR | [F] ATIRAR TEIA </div>
 
             <script>
                 const canvas = document.getElementById("gameCanvas");
                 const ctx = canvas.getContext("2d");
-
                 let gameScale = 1;
 
                 function resizeCanvas() {
                     const container = document.querySelector('.game-container');
                     canvas.width = container.clientWidth;
                     canvas.height = container.clientHeight;
-
-                    if (window.innerWidth <= 768) {
-                        gameScale = 0.65;
-                    } else {
-                        gameScale = 1;
-                    }
-
-                    aranha.w = 75 * gameScale;
-                    aranha.h = 100 * gameScale;
-                    duende.w = 85 * gameScale;
-                    duende.h = 110 * gameScale;
+                    if (window.innerWidth <= 768) { gameScale = 0.65; }
+                    else if (window.innerWidth <= 1180) { gameScale = 0.9; }
+                    else { gameScale = 1; }
+                    aranha.w = 75 * gameScale; aranha.h = 100 * gameScale;
+                    duende.w = 85 * gameScale; duende.h = 110 * gameScale;
                 }
 
                 window.addEventListener('resize', resizeCanvas);
@@ -377,21 +414,17 @@
                 const fundoImg = new Image(); fundoImg.src = 'assets/img-fundo1.png';
                 const aranhaImg = new Image(); aranhaImg.src = 'assets/spidey-game1.png';
                 const duendeImg = new Image(); duendeImg.src = 'assets/green-goblin.png';
-
                 const musicaFundo = new Audio('assets/goblin-fight.mp3');
-                musicaFundo.loop = true;
-                musicaFundo.volume = 0.5;
+                musicaFundo.loop = true; musicaFundo.volume = 0.5;
 
                 let jogoAtivo = false;
                 let scoreAranha = 0, scoreDuende = 0;
-
                 const keys = { a: false, d: false };
 
-                const aranha = { x: 100, y: 200, w: 75, h: 100, vida: 100, vY: 0, pulando: false, dir: 1 };
-                const duende = { x: 500, y: 200, w: 85, h: 110, vida: 100, vY: 0 };
+                const aranha = { x: 100, y: 200, w: 75, h: 100, vida: 100, vY: 0, pulando: false, dir: 1, isHit: 0 };
+                const duende = { x: 500, y: 200, w: 85, h: 110, vida: 100, vY: 0, isHit: 0 };
 
                 resizeCanvas();
-
                 let teias = [], bombas = [];
 
                 function startGame() {
@@ -434,12 +467,19 @@
 
                     if (Math.random() < 0.02) { bombas.push({ x: duende.x, y: duende.y + 30, vX: -7 * gameScale, vY: -3 * gameScale }); }
 
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = "red";
+                    // Desenho Aranha com Flash
+                    ctx.save();
+                    if (aranha.isHit > 0) { ctx.filter = "brightness(3)"; aranha.isHit--; }
+                    ctx.shadowBlur = 15; ctx.shadowColor = "red";
                     if (aranhaImg.complete) ctx.drawImage(aranhaImg, aranha.x, aranha.y, aranha.w, aranha.h);
-                    ctx.shadowColor = "#39FF14";
+                    ctx.restore();
+
+                    // Desenho Duende com Flash
+                    ctx.save();
+                    if (duende.isHit > 0) { ctx.filter = "brightness(2) sepia(1) hue-rotate(70deg) saturate(5)"; duende.isHit--; }
+                    ctx.shadowBlur = 15; ctx.shadowColor = "#39FF14";
                     if (duendeImg.complete) ctx.drawImage(duendeImg, duende.x, duende.y, duende.w, duende.h);
-                    ctx.shadowBlur = 0;
+                    ctx.restore();
 
                     teias.forEach((t, i) => {
                         t.x += t.vX;
@@ -447,6 +487,7 @@
                         ctx.fillRect(t.x, t.y, 20 * gameScale, 5 * gameScale);
                         if (t.x > duende.x && t.x < duende.x + duende.w && t.y > duende.y && t.y < duende.y + duende.h) {
                             duende.vida -= 5;
+                            duende.isHit = 8;
                             document.getElementById('duende-health').style.width = Math.max(0, duende.vida) + "%";
                             teias.splice(i, 1);
                         }
@@ -459,6 +500,7 @@
                         ctx.beginPath(); ctx.arc(b.x, b.y, 8 * gameScale, 0, Math.PI * 2); ctx.fill();
                         if (b.x > aranha.x && b.x < aranha.x + aranha.w && b.y > aranha.y && b.y < aranha.y + aranha.h) {
                             aranha.vida -= 10;
+                            aranha.isHit = 8;
                             document.getElementById('aranha-health').style.width = Math.max(0, aranha.vida) + "%";
                             bombas.splice(i, 1);
                         }

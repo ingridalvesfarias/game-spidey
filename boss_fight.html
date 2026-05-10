@@ -271,7 +271,8 @@
             color: #888;
         }
 
-        @media (max-width: 768px) {
+        /* --- RESPONSIVIDADE TABLET (VERTICAL E HORIZONTAL) --- */
+        @media (max-width: 1180px) {
             #mobile-controls {
                 display: flex;
             }
@@ -283,6 +284,8 @@
             #game-wrapper {
                 border-color: #ff0000;
                 box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+                /* Reduz altura do canvas no tablet para caber os botões */
+                max-height: 60vh;
             }
         }
     </style>
@@ -356,7 +359,7 @@
                 let joyActive = false;
                 let joyX = 0; // -1 a 1
                 let joyY = 0; // -1 a 1
-                let joystickTouchId = null; // ID único para o dedo do joystick
+                let joystickTouchId = null;
 
                 const imgBG = new Image(); imgBG.src = 'assets/img-fundo4.png';
                 const player = { x: 100, y: 350, radius: 25, hp: 100, speed: 7 };
@@ -369,7 +372,7 @@
                     loop();
                 }
 
-                // --- LÓGICA DO JOYSTICK (COM MULTI-TOUCH) ---
+                // Funções do Joystick
                 const joyContainer = document.getElementById('joystick-container');
                 const joyStick = document.getElementById('joystick-stick');
 
@@ -424,14 +427,12 @@
                     joyY = dy / maxDist;
                 }
 
-                // Teclado
                 window.addEventListener('keydown', e => {
                     keys[e.code] = true;
                     if (e.code === 'KeyF' && gameRunning) shootWeb();
                 });
                 window.addEventListener('keyup', e => keys[e.code] = false);
 
-                // Botão de Ataque Mobile (Multi-touch)
                 document.getElementById('m-attack').addEventListener('touchstart', (e) => {
                     if (e.cancelable) e.preventDefault();
                     if (gameRunning) shootWeb();

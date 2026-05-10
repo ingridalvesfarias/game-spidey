@@ -51,6 +51,8 @@ O projeto foi totalmente otimizado para **PC**, **Celular** e **Tablets (iPad)**
 
 Acesse e jogue agora: [https://game-spidey.vercel.app/](https://game-spidey.vercel.app/)
 
+<img src="img/imagem do projeto.png" alt="imagem do projeto">
+
 ## ⚖️ Licença
 
 Este projeto é licenciado sob a Licença MIT - consulte o arquivo [LICENSE](LICENSE) para detalhes.

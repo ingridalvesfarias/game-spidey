@@ -38,10 +38,9 @@ O projeto foi otimizado para **PC** e **Mobile**:
 - **W, A, S, D**: Movimentação.
 - **ESPAÇO**: Balanço de Teia.
 - **F**: Atirar Teia.
-- **R**: Reiniciar Jogo.
 
 ### Celular (Touch)
-- **D-Pad Virtual**: Botões direcionais na tela para movimentação.
+- **Joystick virtual**: Controle preciso de direção
 - **Botão WEB/Attack**: Gatilhos táteis para disparar teias e balançar.
 - **Interface Adaptável**: Menu de seleção com scroll lateral e setas de navegação.
 
